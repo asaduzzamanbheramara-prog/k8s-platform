@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kobo
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/YOUR_REPO/k8s-platform
+    targetRevision: main
+    path: apps/kobo
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kobo
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
