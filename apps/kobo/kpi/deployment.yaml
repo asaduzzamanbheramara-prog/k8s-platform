@@ -17,6 +17,20 @@ spec:
         app: kpi
 
     spec:
+      initContainers:
+        - name: init-media
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              mkdir -p /srv/src/kobocat/media
+              chmod -R 777 /srv/src/kobocat
+
+          volumeMounts:
+            - name: kpi-media
+              mountPath: /srv/src/kobocat
+
       containers:
         - name: kpi
           image: kobotoolbox/kpi:2.026.12i
@@ -28,21 +42,18 @@ spec:
             - name: ALLOWED_HOSTS
               value: "*"
 
-            # 🔥 CRITICAL: PostgreSQL connection
             - name: DATABASE_URL
               value: postgresql://kobo:change_me@kobo-postgres.kobo.svc.cluster.local:5432/kobo
 
-            # 🔥 CRITICAL: Redis (even if not used heavily, KPI expects it)
             - name: REDIS_URL
               value: redis://redis.kobo.svc.cluster.local:6379/0
 
-            # 🔥 CRITICAL: Django secret key
             - name: SECRET_KEY
               value: "kobo-change-this-secret-key"
 
           volumeMounts:
             - name: kpi-media
-              mountPath: /srv/src/kpi/media
+              mountPath: /srv/src/kobocat
 
       volumes:
         - name: kpi-media
