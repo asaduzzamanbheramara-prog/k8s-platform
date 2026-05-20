@@ -21,6 +21,9 @@ spec:
         - name: kpi
           image: kobotoolbox/kpi:2.026.12i
 
+          # 🔥 FORCE CORRECT WORKDIR (IMPORTANT FIX)
+          workingDir: /srv/src/kpi
+
           ports:
             - containerPort: 8000
 
@@ -36,10 +39,3 @@ spec:
 
             - name: SECRET_KEY
               value: "kobo-change-this-secret-key"
-
-          # ❌ IMPORTANT: DO NOT mount /srv/src/kpi or kobocat or media roots
-          # This image breaks when you override internal filesystem
-
-          volumeMounts: []
-
-      volumes: []
