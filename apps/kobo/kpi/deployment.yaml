@@ -17,7 +17,6 @@ spec:
         app: kpi
 
     spec:
-
       containers:
         - name: kpi
           image: kobotoolbox/kpi:2.026.12i
@@ -38,10 +37,9 @@ spec:
             - name: SECRET_KEY
               value: "kobo-change-this-secret-key"
 
-          volumeMounts:
-            - name: kpi-data
-              mountPath: /srv/src/kpi
+          # ❌ IMPORTANT: DO NOT mount /srv/src/kpi or kobocat or media roots
+          # This image breaks when you override internal filesystem
 
-      volumes:
-        - name: kpi-data
-          emptyDir: {}
+          volumeMounts: []
+
+      volumes: []
