@@ -6,35 +6,51 @@ metadata:
 spec:
   serviceName: kobo-postgres
   replicas: 1
+
   selector:
     matchLabels:
       app: kobo-postgres
+
   template:
     metadata:
       labels:
         app: kobo-postgres
+
     spec:
       containers:
         - name: postgres
           image: postgis/postgis:14-3.2
+
           ports:
             - containerPort: 5432
+
           env:
             - name: POSTGRES_DB
               value: kobo
+
             - name: POSTGRES_USER
               value: kobo
+
             - name: POSTGRES_PASSWORD
               value: change_me
+
+            # ✅ CRITICAL FIX: prevents lost+found initdb crash
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+
           volumeMounts:
             - name: data
               mountPath: /var/lib/postgresql/data
+
   volumeClaimTemplates:
     - metadata:
         name: data
+
       spec:
         accessModes: ["ReadWriteOnce"]
+
         storageClassName: k3s-ha-storage
+
         resources:
           requests:
             storage: 10Gi
