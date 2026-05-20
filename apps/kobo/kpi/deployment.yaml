@@ -28,8 +28,19 @@ spec:
             - name: ALLOWED_HOSTS
               value: "*"
 
+            # 🔥 CRITICAL: PostgreSQL connection
+            - name: DATABASE_URL
+              value: postgresql://kobo:change_me@kobo-postgres.kobo.svc.cluster.local:5432/kobo
+
+            # 🔥 CRITICAL: Redis (even if not used heavily, KPI expects it)
+            - name: REDIS_URL
+              value: redis://redis.kobo.svc.cluster.local:6379/0
+
+            # 🔥 CRITICAL: Django secret key
+            - name: SECRET_KEY
+              value: "kobo-change-this-secret-key"
+
           volumeMounts:
-            # ONLY mount media, NOT whole app
             - name: kpi-media
               mountPath: /srv/src/kpi/media
 
