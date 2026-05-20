@@ -19,19 +19,19 @@ spec:
     spec:
 
       initContainers:
-        - name: init-kpi-dirs
+        - name: init-kpi
           image: busybox:1.36
           command:
             - sh
             - -c
             - |
-              mkdir -p /srv/src/kobocat/media
-              mkdir -p /srv/src/kobocat/logs
-              chmod -R 777 /srv/src/kobocat || true
+              mkdir -p /srv/src/kpi/media
+              mkdir -p /srv/src/kpi/logs
+              chmod -R 777 /srv/src/kpi
 
           volumeMounts:
             - name: kpi-data
-              mountPath: /srv/src/kobocat
+              mountPath: /srv/src/kpi
 
       containers:
         - name: kpi
@@ -55,7 +55,7 @@ spec:
 
           volumeMounts:
             - name: kpi-data
-              mountPath: /srv/src/kobocat
+              mountPath: /srv/src/kpi
 
       volumes:
         - name: kpi-data
