@@ -17,18 +17,20 @@ spec:
         app: kpi
 
     spec:
+
       initContainers:
-        - name: init-media
+        - name: init-kpi-dirs
           image: busybox:1.36
           command:
             - sh
             - -c
             - |
               mkdir -p /srv/src/kobocat/media
-              chmod -R 777 /srv/src/kobocat
+              mkdir -p /srv/src/kobocat/logs
+              chmod -R 777 /srv/src/kobocat || true
 
           volumeMounts:
-            - name: kpi-media
+            - name: kpi-data
               mountPath: /srv/src/kobocat
 
       containers:
@@ -52,9 +54,9 @@ spec:
               value: "kobo-change-this-secret-key"
 
           volumeMounts:
-            - name: kpi-media
+            - name: kpi-data
               mountPath: /srv/src/kobocat
 
       volumes:
-        - name: kpi-media
+        - name: kpi-data
           emptyDir: {}
