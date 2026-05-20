@@ -5,7 +5,6 @@ metadata:
   namespace: kobo
 spec:
   replicas: 2
-
   selector:
     matchLabels:
       app: kpi
@@ -16,16 +15,16 @@ spec:
         app: kpi
 
     spec:
-
-      # ✅ FIX 1: ensure required directory exists
+      # 🔥 INIT: create full required directory structure
       initContainers:
-        - name: init-media-dir
+        - name: init-kpi-dirs
           image: busybox:1.36
           command:
             - sh
             - -c
             - |
               mkdir -p /srv/src/kpi/media
+              mkdir -p /srv/src/kpi/logs
               chmod -R 777 /srv/src/kpi
 
           volumeMounts:
@@ -47,7 +46,7 @@ spec:
             - name: kpi-data
               mountPath: /srv/src/kpi
 
-      # ✅ FIX 2: required shared volume
+      # 🔥 FIX: persistent temp FS for runtime files
       volumes:
         - name: kpi-data
           emptyDir: {}
