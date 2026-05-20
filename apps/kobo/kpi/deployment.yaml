@@ -17,10 +17,17 @@ spec:
         app: kpi
 
     spec:
-
       containers:
         - name: kpi
           image: kobotoolbox/kpi:2.026.12i
+
+          command:
+            - bash
+            - -c
+            - |
+              mkdir -p /srv/src/kpi/media
+              mkdir -p /srv/src/kpi/logs
+              exec /srv/src/kpi/docker/entrypoint.sh
 
           ports:
             - containerPort: 8000
@@ -37,6 +44,3 @@ spec:
 
             - name: SECRET_KEY
               value: "kobo-change-this-secret-key"
-
-          # 🚨 DO NOT OVERRIDE FILESYSTEM PATHS
-          volumeMounts: []
