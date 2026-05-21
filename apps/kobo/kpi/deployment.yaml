@@ -38,11 +38,13 @@ spec:
           volumeMounts:
             - name: kpi-media
               mountPath: /mnt/media
+
             - name: kpi-logs
               mountPath: /mnt/logs
 
       containers:
         - name: kpi
+
           image: kobotoolbox/kpi:2.026.12i
           imagePullPolicy: IfNotPresent
 
@@ -54,20 +56,28 @@ spec:
           env:
             - name: DJANGO_SETTINGS_MODULE
               value: kobo.settings.override
+
             - name: PYTHONPATH
               value: /srv/src
+
             - name: SECRET_KEY
               value: shopnoltd-production-secret
+
             - name: DATABASE_URL
               value: postgresql://kobo:change_me@kobo-postgres.kobo.svc.cluster.local:5432/kpi
+
             - name: KOBOCAT_DATABASE_URL
               value: postgresql://kobo:change_me@kobo-postgres.kobo.svc.cluster.local:5432/kobocat
+
             - name: REDIS_URL
               value: redis://redis.kobo.svc.cluster.local:6379/0
+
             - name: CACHE_URL
               value: redis://redis.kobo.svc.cluster.local:6379/0
+
             - name: CELERY_BROKER_URL
               value: redis://redis.kobo.svc.cluster.local:6379/1
+
             - name: MONGO_DB_URL
               value: mongodb://mongo.kobo.svc.cluster.local:27017/kobo
 
@@ -79,18 +89,32 @@ spec:
 
               echo "=== KPI START (STABLE MODE) ==="
 
-              mkdir -p /srv/src/kpi/media /srv/src/kpi/logs
+              mkdir -p /srv/src/kpi/media
+              mkdir -p /srv/src/kpi/logs
 
               echo "=== SETTINGS TEST ==="
               python -c "import kobo.settings.override; print('SETTINGS OK')"
 
+              echo "=== DATABASE WAIT ==="
+              until nc -z kobo-postgres.kobo.svc.cluster.local 5432; do
+                echo "Waiting PostgreSQL..."
+                sleep 5
+              done
+
+              echo "=== REDIS WAIT ==="
+              until nc -z redis.kobo.svc.cluster.local 6379; do
+                echo "Waiting Redis..."
+                sleep 5
+              done
+
               echo "=== MIGRATIONS ==="
               python manage.py migrate --noinput || true
 
-              echo "=== COLLECTSTATIC (SAFE) ==="
+              echo "=== COLLECTSTATIC ==="
               python manage.py collectstatic --noinput --clear || true
 
               echo "=== START UWSGI ==="
+
               exec uwsgi \
                 --http 0.0.0.0:8000 \
                 --module kobo.wsgi:application \
@@ -104,22 +128,44 @@ spec:
                 --vacuum \
                 --die-on-term
 
-          readinessProbe:
-            tcpSocket:
+          startupProbe:
+            httpGet:
+              path: /
               port: 8000
-            initialDelaySeconds: 10
+            failureThreshold: 30
             periodSeconds: 10
+            timeoutSeconds: 5
+
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+              httpHeaders:
+                - name: Host
+                  value: kpi.shopnoltd.dpdns.org
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
 
           livenessProbe:
-            tcpSocket:
+            httpGet:
+              path: /
               port: 8000
+              httpHeaders:
+                - name: Host
+                  value: kpi.shopnoltd.dpdns.org
             initialDelaySeconds: 60
             periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 5
 
           resources:
             requests:
               memory: "512Mi"
               cpu: "250m"
+
             limits:
               memory: "2Gi"
               cpu: "1000m"
@@ -127,8 +173,10 @@ spec:
           volumeMounts:
             - name: kpi-media
               mountPath: /srv/src/kpi/media
+
             - name: kpi-logs
               mountPath: /srv/src/kpi/logs
+
             - name: kpi-settings
               mountPath: /srv/src/kpi/kobo/settings/override.py
               subPath: override.py
