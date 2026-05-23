@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: billing-api
+  namespace: erp
+
+spec:
+  replicas: 1
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+  selector:
+    matchLabels:
+      app: billing-api
+
+  template:
+    metadata:
+      labels:
+        app: billing-api
+
+    spec:
+      terminationGracePeriodSeconds: 30
+
+      containers:
+        - name: billing-api
+          image: docker.io/shopnoltd/billing:latest
+
+          ports:
+            - containerPort: 8080
+
+          env:
+            - name: DATABASE_URL
+              value: postgres://billing:billing@billing-postgres.erp.svc.cluster.local:5432/billing
+
+            - name: REDIS_URL
+              value: redis://billing-redis.erp.svc.cluster.local:6379
+
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 20

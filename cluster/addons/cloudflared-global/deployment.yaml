@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: cloudflared-global
+  namespace: kube-system
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: cloudflared-global
+
+  template:
+    metadata:
+      labels:
+        app: cloudflared-global
+
+    spec:
+      containers:
+        - name: cloudflared
+
+          image: cloudflare/cloudflared:latest
+
+          command:
+            - cloudflared
+
+          args:
+            - --config
+            - /etc/cloudflared/config.yaml
+            - tunnel
+            - run
+
+          env:
+            - name: TUNNEL_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflared-global-secret
+                  key: TUNNEL_TOKEN
+
+          volumeMounts:
+            - name: config
+              mountPath: /etc/cloudflared
+
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            allowPrivilegeEscalation: false
+
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
+      volumes:
+        - name: config
+          configMap:
+            name: cloudflared-global-config

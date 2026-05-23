@@ -1,0 +1,13 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+
+metadata:
+  name: kpi-worker-pdb
+  namespace: kobo
+
+spec:
+  minAvailable: 3
+
+  selector:
+    matchLabels:
+      app: kpi-worker

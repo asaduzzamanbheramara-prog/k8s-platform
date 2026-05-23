@@ -3,6 +3,7 @@ kind: StatefulSet
 metadata:
   name: kobo-postgres
   namespace: kobo
+
 spec:
   serviceName: kobo-postgres
   replicas: 1
@@ -27,14 +28,10 @@ spec:
           env:
             - name: POSTGRES_DB
               value: kobo
-
             - name: POSTGRES_USER
               value: kobo
-
             - name: POSTGRES_PASSWORD
               value: change_me
-
-            # ✅ CRITICAL FIX: prevents lost+found initdb crash
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
 
@@ -45,12 +42,9 @@ spec:
   volumeClaimTemplates:
     - metadata:
         name: data
-
       spec:
         accessModes: ["ReadWriteOnce"]
-
-        storageClassName: k3s-ha-storage
-
+        storageClassName: local-path   # ✅ FIXED
         resources:
           requests:
             storage: 10Gi

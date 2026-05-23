@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: enketo
+  namespace: kobo
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: enketo
+
+  template:
+    metadata:
+      labels:
+        app: enketo
+
+    spec:
+      containers:
+        - name: enketo
+
+          image: ghcr.io/enketo/enketo-express
+
+          imagePullPolicy: Always
+
+          ports:
+            - containerPort: 8005
+
+          env:
+            - name: PORT
+              value: "8005"
+
+            - name: ENKETO_API_TOKEN
+              value: secrettoken
+
+            - name: KOBOCAT_URL
+              value: https://kc.shopnoltd.dpdns.org
+
+            - name: KOBO_URL
+              value: https://kf.shopnoltd.dpdns.org
+
+            - name: ENKETO_REDIS_URL
+              value: redis://redis.kobo.svc.cluster.local:6379/1
+
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8005
+            initialDelaySeconds: 30
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8005
+            initialDelaySeconds: 60
+            periodSeconds: 20

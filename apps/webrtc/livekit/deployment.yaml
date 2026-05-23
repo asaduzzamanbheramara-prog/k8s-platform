@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: livekit
+  namespace: realtime
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: livekit
+
+  template:
+    metadata:
+      labels:
+        app: livekit
+
+    spec:
+      containers:
+        - name: livekit
+
+          image: livekit/livekit-server:latest
+
+          args:
+            - --dev
+
+          ports:
+            - containerPort: 7880
+
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "128Mi"
+
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
+
+          securityContext:
+            allowPrivilegeEscalation: false

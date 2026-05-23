@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: enketo
+  namespace: kobo
+
+spec:
+  selector:
+    app: enketo
+
+  ports:
+    - name: http
+      port: 8005
+      targetPort: 8005

@@ -1,0 +1,108 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: observability
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: loki-pvc
+  namespace: observability
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard-rwo
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loki
+  namespace: observability
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: loki
+
+  template:
+    metadata:
+      labels:
+        app: loki
+
+    spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app: loki
+
+      containers:
+        - name: loki
+          image: grafana/loki:2.9.0
+
+          ports:
+            - containerPort: 3100
+
+          volumeMounts:
+            - name: loki-data
+              mountPath: /loki
+
+      volumes:
+        - name: loki-data
+          persistentVolumeClaim:
+            claimName: loki-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tempo-pvc
+  namespace: observability
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard-rwo
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tempo
+  namespace: observability
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: tempo
+
+  template:
+    metadata:
+      labels:
+        app: tempo
+
+    spec:
+      containers:
+        - name: tempo
+          image: grafana/tempo:2.5.0
+
+          ports:
+            - containerPort: 3200
+
+          volumeMounts:
+            - name: tempo-data
+              mountPath: /tmp/tempo
+
+      volumes:
+        - name: tempo-data
+          persistentVolumeClaim:
+            claimName: tempo-pvc

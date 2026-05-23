@@ -1,0 +1,12 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+
+metadata:
+  name: global-ha-pdb
+  namespace: kobo
+
+spec:
+  minAvailable: 3
+  selector:
+    matchLabels:
+      app: kpi-worker

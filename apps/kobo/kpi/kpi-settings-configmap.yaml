@@ -1,5 +1,6 @@
 apiVersion: v1
 kind: ConfigMap
+
 metadata:
   name: kpi-settings-override
   namespace: kobo
@@ -8,40 +9,42 @@ data:
   override.py: |
     from .base import *
     import os
-    import dj_database_url
 
     DEBUG = False
-    SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret-key")
+
+    SECRET_KEY = os.getenv(
+        "SECRET_KEY",
+        "shopnoltd-production-secret"
+    )
 
     ALLOWED_HOSTS = ["*"]
 
-    DATABASE_URL = os.getenv("DATABASE_URL", "")
-
-    if DATABASE_URL:
-        DATABASES = {
-            "default": dj_database_url.parse(DATABASE_URL, conn_max_age=60)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "kpi",
+            "USER": "kobo",
+            "PASSWORD": "change_me",
+            "HOST": "kobo-postgres.kobo.svc.cluster.local",
+            "PORT": "5432",
         }
-    else:
-        DATABASES = {
-            "default": {
-                "ENGINE": "django.db.backends.postgresql",
-                "NAME": "kpi",
-                "USER": "kobo",
-                "PASSWORD": "change_me",
-                "HOST": "kobo-postgres.kobo.svc.cluster.local",
-                "PORT": "5432",
-            }
-        }
+    }
 
     KOBOCAT_URL = "https://kf.shopnoltd.dpdns.org"
 
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_PROXY_SSL_HEADER = (
+        "HTTP_X_FORWARDED_PROTO",
+        "https"
+    )
+
     USE_X_FORWARDED_HOST = True
+
     SECURE_SSL_REDIRECT = False
 
     CSRF_TRUSTED_ORIGINS = [
         "https://kpi.shopnoltd.dpdns.org",
         "https://kf.shopnoltd.dpdns.org",
+        "https://kobo.shopnoltd.dpdns.org",
         "https://shopnoltd.dpdns.org",
     ]
 
@@ -50,16 +53,6 @@ data:
 
     MEDIA_URL = "/media/"
     MEDIA_ROOT = "/srv/src/kpi/media"
-
-    STATICFILES_DIRS = [
-        "/srv/src/kpi/static",
-    ]
-
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
-    WHITENOISE_USE_FINDERS = True
-    WHITENOISE_AUTOREFRESH = True
-    WHITENOISE_MANIFEST_STRICT = False
 
     SITE_NAME = "ShopnoltdToolbox KPI"
     SITE_TITLE = "ShopnoltdToolbox Data Platform"

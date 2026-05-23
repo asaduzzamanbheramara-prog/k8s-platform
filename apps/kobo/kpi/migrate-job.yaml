@@ -1,0 +1,87 @@
+apiVersion: batch/v1
+kind: Job
+
+metadata:
+  name: kpi-migrate
+  namespace: kobo
+
+spec:
+  backoffLimit: 1
+
+  template:
+    spec:
+      restartPolicy: Never
+
+      containers:
+        - name: migrate
+
+          image: kobotoolbox/kpi:2.026.12i
+          imagePullPolicy: IfNotPresent
+
+          workingDir: /srv/src/kpi
+
+          command:
+            - /bin/bash
+            - -c
+            - |
+              set -ex
+
+              export DJANGO_SETTINGS_MODULE=kobo.settings.override
+              export PYTHONPATH=/srv/src/kpi
+
+              echo "===== RUN DJANGO MIGRATIONS ====="
+
+              python manage.py migrate --noinput
+
+              echo "===== CREATE CACHE TABLE ====="
+
+              python manage.py createcachetable
+
+              echo "===== MIGRATIONS FINISHED ====="
+
+          env:
+            - name: DJANGO_SETTINGS_MODULE
+              value: kobo.settings.override
+
+            - name: PYTHONPATH
+              value: /srv/src/kpi
+
+            - name: DATABASE_URL
+              value: postgresql://kobo:change_me@kobo-postgres.kobo.svc.cluster.local:5432/kpi
+
+            - name: KOBOCAT_DATABASE_URL
+              value: postgresql://kobo:change_me@kobo-postgres.kobo.svc.cluster.local:5432/kobocat
+
+            - name: REDIS_URL
+              value: redis://redis.kobo.svc.cluster.local:6379/0
+
+            - name: CACHE_URL
+              value: redis://redis.kobo.svc.cluster.local:6379/0
+
+            - name: DJANGO_REDIS_URL
+              value: redis://redis.kobo.svc.cluster.local:6379/0
+
+            - name: CONSTANCE_REDIS_CONNECTION
+              value: redis://redis.kobo.svc.cluster.local:6379/0
+
+            - name: BROKER_URL
+              value: redis://redis.kobo.svc.cluster.local:6379/1
+
+            - name: CELERY_BROKER_URL
+              value: redis://redis.kobo.svc.cluster.local:6379/1
+
+            - name: MONGO_DB_URL
+              value: mongodb://mongo.kobo.svc.cluster.local:27017/kobo
+
+            - name: SECRET_KEY
+              value: kobo-change-this-secret-key
+
+          volumeMounts:
+            - name: kpi-settings
+              mountPath: /srv/src/kpi/kobo/settings/override.py
+              subPath: override.py
+
+      volumes:
+        - name: kpi-settings
+          configMap:
+            name: kpi-settings-override

@@ -3,21 +3,53 @@ kind: Deployment
 metadata:
   name: odoo
   namespace: erp
+
 spec:
-  replicas: 2
+  replicas: 1
+
   selector:
     matchLabels:
       app: odoo
+
   template:
     metadata:
       labels:
         app: odoo
+
     spec:
       containers:
         - name: odoo
           image: odoo:17
+
           ports:
             - containerPort: 8069
+
           env:
             - name: HOST
-              value: postgres
+              value: postgres.erp.svc.cluster.local
+
+            - name: USER
+              value: odoo
+
+            - name: PASSWORD
+              value: odooStrongPassword123!
+
+            - name: DB_NAME
+              value: erp
+
+            - name: DB_PORT
+              value: "5432"
+
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8069
+            initialDelaySeconds: 40
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8069
+            initialDelaySeconds: 80
+            periodSeconds: 20

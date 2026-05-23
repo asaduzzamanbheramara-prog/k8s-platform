@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: coturn
+  namespace: realtime
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: coturn
+
+  template:
+    metadata:
+      labels:
+        app: coturn
+
+    spec:
+      containers:
+        - name: coturn
+
+          image: coturn/coturn:latest
+
+          args:
+            - -n
+
+          ports:
+            - containerPort: 3478
+              protocol: UDP
+
+          resources:
+            requests:
+              cpu: "25m"
+              memory: "64Mi"
+
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+
+          securityContext:
+            allowPrivilegeEscalation: false

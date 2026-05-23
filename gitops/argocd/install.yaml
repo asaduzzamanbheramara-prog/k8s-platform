@@ -3,8 +3,23 @@ kind: Namespace
 metadata:
   name: argocd
 ---
-apiVersion: v1
-kind: ServiceAccount
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: argocd-admin
+  name: argocd-server
   namespace: argocd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: argocd-server
+  template:
+    metadata:
+      labels:
+        app: argocd-server
+    spec:
+      containers:
+        - name: argocd-server
+          image: quay.io/argoproj/argocd:v2.11.3
+          ports:
+            - containerPort: 8080

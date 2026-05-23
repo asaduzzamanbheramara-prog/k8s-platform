@@ -1,18 +1,24 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
+
 metadata:
   name: erp-ingress
   namespace: erp
+
 spec:
   ingressClassName: nginx
+
   rules:
     - host: erp.shopnoltd.dpdns.org
+
       http:
         paths:
           - path: /
             pathType: Prefix
+
             backend:
               service:
                 name: odoo
+
                 port:
                   number: 8069

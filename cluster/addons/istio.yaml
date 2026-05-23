@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: istio-system
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: istiod
+  namespace: istio-system
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: istiod
+
+  template:
+    metadata:
+      labels:
+        app: istiod
+
+    spec:
+      containers:
+        - name: discovery
+          image: istio/pilot:1.20.0
