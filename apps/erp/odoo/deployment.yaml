@@ -1,5 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: odoo
   namespace: erp
@@ -19,7 +20,10 @@ spec:
     spec:
       containers:
         - name: odoo
+
           image: odoo:17
+
+          imagePullPolicy: IfNotPresent
 
           ports:
             - containerPort: 8069
@@ -39,6 +43,15 @@ spec:
 
             - name: DB_PORT
               value: "5432"
+
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
 
           readinessProbe:
             httpGet:
