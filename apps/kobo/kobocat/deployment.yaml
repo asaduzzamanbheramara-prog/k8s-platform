@@ -23,44 +23,43 @@ spec:
 
           image: kobotoolbox/kobocat:latest
 
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
 
           ports:
             - containerPort: 8000
 
           env:
             - name: DJANGO_SETTINGS_MODULE
-              value: kobocat.settings.kobo
+              value: onadata.settings.kc_production
 
-            - name: KOBOCAT_DATABASE_NAME
-              value: kobocat
-
-            - name: KOBOCAT_DATABASE_USER
-              value: postgres
-
-            - name: KOBOCAT_DATABASE_PASSWORD
-              value: postgres
-
-            - name: KOBOCAT_DATABASE_HOST
-              value: postgres.kobo.svc.cluster.local
-
-            - name: KOBOCAT_REDIS_URL
-              value: redis://redis.kobo.svc.cluster.local:6379/1
-
-            - name: KOBO_URL
-              value: https://kf.shopnoltd.dpdns.org
+            - name: DATABASE_URL
+              value: postgres://kobo:kobo@kobo-postgres.kobo.svc.cluster.local:5432/kobocat
 
             - name: KOBOCAT_URL
               value: https://kc.shopnoltd.dpdns.org
 
+            - name: KOBOFORMS_URL
+              value: https://kf.shopnoltd.dpdns.org
+
             - name: ENKETO_URL
               value: https://ee.shopnoltd.dpdns.org
 
-          resources:
-            requests:
-              cpu: "100m"
-              memory: "256Mi"
+            - name: REDIS_URL
+              value: redis://redis.kobo.svc.cluster.local:6379/1
 
-            limits:
-              cpu: "1"
-              memory: "1Gi"
+            - name: CELERY_BROKER_URL
+              value: redis://redis.kobo.svc.cluster.local:6379/2
+
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 40
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 80
+            periodSeconds: 20
