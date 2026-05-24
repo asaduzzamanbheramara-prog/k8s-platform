@@ -8,9 +8,6 @@ metadata:
 spec:
   replicas: 1
 
-  strategy:
-    type: Recreate
-
   selector:
     matchLabels:
       app: kpi-worker
@@ -21,32 +18,27 @@ spec:
         app: kpi-worker
 
     spec:
-      terminationGracePeriodSeconds: 30
-
       containers:
         - name: worker
-
-          image: docker.io/shopnoltd/kpi:custom
-          imagePullPolicy: IfNotPresent
+          image: kobotoolbox/kpi:2.2025.12
 
           command:
             - celery
 
           args:
-            - "-A"
-            - "kpi.celery"
-            - "worker"
-            - "--loglevel=info"
-            - "--concurrency=1"
-            - "--pool=solo"
+            - -A
+            - kpi.celery
+            - worker
+            - --loglevel=info
+            - --pool=prefork
+            - --concurrency=2
 
           env:
             - name: DJANGO_SETTINGS_MODULE
               value: kpi.settings_override
 
-            # ✅ FIXED (IMPORTANT)
             - name: PYTHONPATH
-              value: /srv/src
+              value: /srv/src/kpi
 
             - name: CELERY_BROKER_URL
               value: redis://redis.kobo.svc.cluster.local:6379/1
@@ -56,14 +48,8 @@ spec:
 
           resources:
             requests:
-              cpu: "25m"
-              memory: "128Mi"
-
+              cpu: "100m"
+              memory: "256Mi"
             limits:
-              cpu: "250m"
+              cpu: "500m"
               memory: "512Mi"
-
-          securityContext:
-            allowPrivilegeEscalation: false
-
-      restartPolicy: Always

@@ -20,40 +20,21 @@ spec:
     spec:
       containers:
         - name: enketo
-
-          image: ghcr.io/enketo/enketo-express
-
-          imagePullPolicy: Always
+          image: enketo/enketo-express:latest
 
           ports:
             - containerPort: 8005
 
           env:
-            - name: PORT
-              value: "8005"
+            - name: NODE_ENV
+              value: production
 
-            - name: ENKETO_API_TOKEN
-              value: secrettoken
+          volumeMounts:
+            - name: enketo-config
+              mountPath: /srv/src/enketo_express/config/config.json
+              subPath: config.json
 
-            - name: KOBOCAT_URL
-              value: https://kc.shopnoltd.dpdns.org
-
-            - name: KOBO_URL
-              value: https://kf.shopnoltd.dpdns.org
-
-            - name: ENKETO_REDIS_URL
-              value: redis://redis.kobo.svc.cluster.local:6379/1
-
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 8005
-            initialDelaySeconds: 30
-            periodSeconds: 10
-
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 8005
-            initialDelaySeconds: 60
-            periodSeconds: 20
+      volumes:
+        - name: enketo-config
+          configMap:
+            name: enketo-config

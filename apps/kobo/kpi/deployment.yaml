@@ -8,9 +8,6 @@ metadata:
 spec:
   replicas: 1
 
-  strategy:
-    type: Recreate
-
   selector:
     matchLabels:
       app: kpi
@@ -21,29 +18,10 @@ spec:
         app: kpi
 
     spec:
-      terminationGracePeriodSeconds: 30
-
       containers:
         - name: kpi
-
-          image: docker.io/shopnoltd/kpi:custom
+          image: kobotoolbox/kpi:2.2025.12
           imagePullPolicy: IfNotPresent
-
-          command:
-            - sh
-            - -c
-
-          args:
-            - |
-              mkdir -p /srv/src/kobocat/media
-              mkdir -p /srv/src/kpi/logs
-
-              exec uwsgi \
-                --http :8000 \
-                --module kobo.wsgi:application \
-                --master \
-                --processes 1 \
-                --threads 2
 
           ports:
             - containerPort: 8000
@@ -53,7 +31,7 @@ spec:
               value: kpi.settings_override
 
             - name: PYTHONPATH
-              value: /srv/src
+              value: /srv/src/kpi
 
             - name: DATABASE_URL
               value: postgres://kobo:kobo@kobo-postgres.kobo.svc.cluster.local:5432/kobo
@@ -70,19 +48,10 @@ spec:
             - name: MONGO_URL
               value: mongodb://mongo.kobo.svc.cluster.local:27017/kobo
 
-          resources:
-            requests:
-              cpu: "50m"
-              memory: "256Mi"
-
-            limits:
-              cpu: "500m"
-              memory: "1Gi"
-
           readinessProbe:
             tcpSocket:
               port: 8000
-            initialDelaySeconds: 20
+            initialDelaySeconds: 25
             periodSeconds: 10
 
           livenessProbe:
@@ -91,7 +60,10 @@ spec:
             initialDelaySeconds: 60
             periodSeconds: 20
 
-          securityContext:
-            allowPrivilegeEscalation: false
-
-      restartPolicy: Always
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
