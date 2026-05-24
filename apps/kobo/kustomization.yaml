@@ -1,0 +1,9 @@
+resources:
+  - namespace.yaml
+  - postgres
+  - kpi
+  - kobocat
+  - redis
+  - worker
+  - enketo
+  - ingress.yaml

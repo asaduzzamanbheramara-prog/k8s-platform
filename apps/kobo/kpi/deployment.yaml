@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kpi
+  namespace: kobo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kpi
+  template:
+    metadata:
+      labels:
+        app: kpi
+    spec:
+      containers:
+        - name: kpi
+          image: kobotoolbox/kpi:latest
+          env:
+            - name: DJANGO_SETTINGS_MODULE
+              value: kobo.settings.override
+            - name: DATABASE_URL
+              value: postgresql://kobo:change_me@kobo-postgres:5432/kpi
+          ports:
+            - containerPort: 8000
