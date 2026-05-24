@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+
+metadata:
+  name: platform-services
+  namespace: argocd
+
+spec:
+  generators:
+    - list:
+        elements:
+          - name: monitoring
+            path: apps/monitoring
+
+          - name: storage
+            path: apps/storage
+
+          - name: queue
+            path: apps/queue
+
+          - name: realtime
+            path: apps/realtime
+
+  template:
+    metadata:
+      name: '{{name}}'
+
+    spec:
+      project: platform
+
+      source:
+        repoURL: https://github.com/asaduzzamanbheramara-prog/k8s-platform.git
+        targetRevision: main
+        path: '{{path}}'
+
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{name}}'
+
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true

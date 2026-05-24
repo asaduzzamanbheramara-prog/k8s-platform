@@ -4,7 +4,6 @@ kind: Kustomization
 resources:
   - ../../apps/billing
   - ../../apps/erp
-  - ../../apps/kobo
   - ../../apps/social
   - ../../apps/realtime
   - ../../apps/queue

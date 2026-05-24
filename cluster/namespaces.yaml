@@ -1,38 +1,23 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: kobo
-
----
-
-apiVersion: v1
-kind: Namespace
-metadata:
   name: erp
-
 ---
-
 apiVersion: v1
 kind: Namespace
 metadata:
   name: mail
-
 ---
-
 apiVersion: v1
 kind: Namespace
 metadata:
   name: monitoring
-
 ---
-
 apiVersion: v1
 kind: Namespace
 metadata:
   name: ingress
-
 ---
-
 apiVersion: v1
 kind: Namespace
 metadata:
