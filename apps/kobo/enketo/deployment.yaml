@@ -1,39 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
-
 metadata:
   name: enketo
   namespace: kobo
-
 spec:
   replicas: 1
-
   selector:
     matchLabels:
       app: enketo
-
   template:
     metadata:
       labels:
         app: enketo
-
     spec:
       containers:
         - name: enketo
-          image: enketo/enketo-express:latest
-
+          image: enketo/enketo-express:6.0.0
           ports:
             - containerPort: 8005
-
           env:
             - name: NODE_ENV
               value: production
-
+            - name: PORT
+              value: "8005"
           volumeMounts:
             - name: enketo-config
               mountPath: /srv/src/enketo_express/config/config.json
               subPath: config.json
-
       volumes:
         - name: enketo-config
           configMap:

@@ -1,69 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
-
 metadata:
   name: kpi
   namespace: kobo
-
 spec:
   replicas: 1
-
   selector:
     matchLabels:
       app: kpi
-
   template:
     metadata:
       labels:
         app: kpi
-
     spec:
       containers:
         - name: kpi
-          image: kobotoolbox/kpi:2.026.12i
-          imagePullPolicy: IfNotPresent
-
+          image: kobotoolbox/kpi:2.026.13a
           ports:
             - containerPort: 8000
-
           env:
             - name: DJANGO_SETTINGS_MODULE
-              value: kpi.settings_override
-
-            - name: PYTHONPATH
-              value: /srv/src/kpi
-
+              value: kobo.settings
             - name: DATABASE_URL
-              value: postgres://kobo:kobo@kobo-postgres.kobo.svc.cluster.local:5432/kobo
-
-            - name: REDIS_URL
-              value: redis://redis.kobo.svc.cluster.local:6379/1
-
-            - name: CELERY_BROKER_URL
-              value: redis://redis.kobo.svc.cluster.local:6379/1
-
-            - name: CELERY_RESULT_BACKEND
-              value: redis://redis.kobo.svc.cluster.local:6379/1
-
-            - name: MONGO_URL
-              value: mongodb://mongo.kobo.svc.cluster.local:27017/kobo
-
-          readinessProbe:
-            tcpSocket:
-              port: 8000
-            initialDelaySeconds: 25
-            periodSeconds: 10
-
-          livenessProbe:
-            tcpSocket:
-              port: 8000
-            initialDelaySeconds: 60
-            periodSeconds: 20
-
-          resources:
-            requests:
-              cpu: "100m"
-              memory: "256Mi"
-            limits:
-              cpu: "1"
-              memory: "1Gi"
+              value: postgres://postgres:postgres@kobo-postgres:5432/kobo
+          volumeMounts:
+            - name: kpi-media
+              mountPath: /srv/src/kpi/media
+            - name: kpi-logs
+              mountPath: /srv/src/kpi/logs
+      volumes:
+        - name: kpi-media
+          persistentVolumeClaim:
+            claimName: kpi-media-pvc
+        - name: kpi-logs
+          persistentVolumeClaim:
+            claimName: kpi-logs-pvc

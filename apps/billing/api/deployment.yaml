@@ -28,36 +28,31 @@ spec:
 
       containers:
         - name: billing-api
-          image: docker.io/shopnoltd/billing:latest
+
+          image: nginxdemos/hello:latest
 
           ports:
-            - containerPort: 8080
-
-          env:
-            - name: DATABASE_URL
-              value: postgres://billing:billing@billing-postgres.erp.svc.cluster.local:5432/billing
-
-            - name: REDIS_URL
-              value: redis://billing-redis.erp.svc.cluster.local:6379
-
-          resources:
-            requests:
-              cpu: "200m"
-              memory: "256Mi"
-            limits:
-              cpu: "1"
-              memory: "1Gi"
+            - containerPort: 80
 
           readinessProbe:
             httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 10
+              path: /
+              port: 80
+            initialDelaySeconds: 5
             periodSeconds: 10
 
           livenessProbe:
             httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 20
+              path: /
+              port: 80
+            initialDelaySeconds: 10
             periodSeconds: 20
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+
+            limits:
+              cpu: "500m"
+              memory: "512Mi"

@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://github.com/asaduzzamanbheramara-prog/k8s-platform
     targetRevision: main
-    path: .
+    path: cluster/apps
 
   destination:
     server: https://kubernetes.default.svc

@@ -16,13 +16,12 @@ spec:
     metadata:
       labels:
         app: odoo
+        topology.kubernetes.io/zone: home
 
     spec:
       containers:
         - name: odoo
-
           image: odoo:17
-
           imagePullPolicy: IfNotPresent
 
           ports:
@@ -46,23 +45,27 @@ spec:
 
           resources:
             requests:
-              memory: "512Mi"
               cpu: "250m"
+              memory: "512Mi"
 
             limits:
+              cpu: "1"
               memory: "1Gi"
-              cpu: "1000m"
 
           readinessProbe:
             httpGet:
-              path: /
+              path: /web/login
               port: 8069
-            initialDelaySeconds: 40
-            periodSeconds: 10
+            initialDelaySeconds: 120
+            periodSeconds: 20
+            timeoutSeconds: 10
+            failureThreshold: 10
 
           livenessProbe:
             httpGet:
-              path: /
+              path: /web/login
               port: 8069
-            initialDelaySeconds: 80
-            periodSeconds: 20
+            initialDelaySeconds: 180
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 10

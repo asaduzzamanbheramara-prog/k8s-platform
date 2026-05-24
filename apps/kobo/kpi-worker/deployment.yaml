@@ -1,23 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kobocat
+  name: kpi-worker
   namespace: kobo
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: kobocat
+      app: kpi-worker
   template:
     metadata:
       labels:
-        app: kobocat
+        app: kpi-worker
     spec:
       containers:
-        - name: kobocat
-          image: kobotoolbox/kobocat:2.024.19e
-          ports:
-            - containerPort: 8000
+        - name: worker
+          image: kobotoolbox/kpi:2.026.13a
+          command: ["celery", "-A", "kobo", "worker", "-l", "info"]
           env:
             - name: DJANGO_SETTINGS_MODULE
               value: kobo.settings

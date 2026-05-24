@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../apps/billing
+  - ../../apps/erp
+  - ../../apps/kobo
+  - ../../apps/social
+  - ../../apps/realtime
+  - ../../apps/queue
+  - ../../apps/storage
+  - ../../apps/webrtc
+  - ../../apps/turn
+  - ../../apps/messaging
+  - ../../apps/monitoring
+  - ../../apps/tools
+  - ../../apps/gateway
+  - ../../apps/search
+  - ../../apps/openai
+  - ../../apps/mail
