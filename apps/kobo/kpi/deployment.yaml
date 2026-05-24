@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: kpi
-          image: kobotoolbox/kpi:2.2025.12
+          image: kobotoolbox/kpi:2.026.12i
           imagePullPolicy: IfNotPresent
 
           ports:

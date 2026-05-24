@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: enketo-config
+  namespace: kobo
+
+data:
+  config.json: |
+    {
+      "app port": 8005,
+      "environment": "production",
+
+      "linked form and data server": {
+        "server url": "https://kf.shopnoltd.dpdns.org"
+      },
+
+      "enketo api token": "secrettoken",
+
+      "redis": {
+        "main": {
+          "host": "redis.kobo.svc.cluster.local",
+          "port": 6379
+        },
+        "cache": {
+          "host": "redis.kobo.svc.cluster.local",
+          "port": 6379
+        }
+      }
+    }
