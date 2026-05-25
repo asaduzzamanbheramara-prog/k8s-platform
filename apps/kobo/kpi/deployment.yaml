@@ -27,29 +27,19 @@ spec:
 
           env:
             - name: DJANGO_SETTINGS_MODULE
-              value: kobo.settings
+              value: kobo.settings.production
 
             - name: DATABASE_URL
-              value: postgresql://kobo:kobo_password@kobo-postgres.kobo.svc.cluster.local:5432/kobo
+              value: postgres://kobo:kobo_password@kobo-postgres.kobo.svc.cluster.local:5432/kobo
 
             - name: CELERY_BROKER_URL
               value: redis://kobo-redis.kobo.svc.cluster.local:6379/0
 
             - name: SECRET_KEY
-              value: "change-me-very-secret"
+              value: super-secret-kobo-key
 
             - name: ALLOWED_HOSTS
               value: "*"
 
-          command:
-            - bash
-            - -c
-
-          args:
-            - |
-              echo "🚀 Kobo KPI starting (clean mode)"
-              sleep 5
-              exec gunicorn kobo.wsgi:application \
-                --bind 0.0.0.0:8000 \
-                --workers 3 \
-                --timeout 120
+          # IMPORTANT: remove ALL custom command/args
+          # Let image run its own entrypoint
