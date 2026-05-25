@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kobo-worker
+  namespace: kobo
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: kobo-worker
+
+  template:
+    metadata:
+      labels:
+        app: kobo-worker
+
+    spec:
+      containers:
+        - name: worker
+          image: kobotoolbox/kpi:2.026.13a
+
+          workingDir: /srv/src/kpi
+
+          command: ["celery"]
+
+          args:
+            - "-A"
+            - "kobo.celery"
+            - "worker"
+            - "-l"
+            - "info"
+
+          env:
+            - name: DJANGO_SETTINGS_MODULE
+              value: kobo.settings
+
+            - name: PYTHONPATH
+              value: /srv/src/kpi
+
+            - name: DATABASE_URL
+              value: postgresql://kobo:change_me@kobo-postgres.kobo.svc.cluster.local:5432/kpi
+
+            - name: CELERY_BROKER_URL
+              value: redis://kobo-redis.kobo.svc.cluster.local:6379/0
+
+          volumeMounts:
+            - name: media
+              mountPath: /srv/src/kpi/media
+            - name: logs
+              mountPath: /srv/src/kpi/logs
+
+      volumes:
+        - name: media
+          emptyDir: {}
+        - name: logs
+          emptyDir: {}

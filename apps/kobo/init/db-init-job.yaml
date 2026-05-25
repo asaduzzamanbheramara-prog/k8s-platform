@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kobo-db-init
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: init
+        image: postgres:15
+        env:
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: kobo-db-secret
+              key: password
+        command:
+          - /bin/bash
+          - -c
+          - |
+            for db in kpi kobocat; do
+              psql -h kobo-postgres -U kobo -d postgres -c "CREATE DATABASE ;" || true
+            done

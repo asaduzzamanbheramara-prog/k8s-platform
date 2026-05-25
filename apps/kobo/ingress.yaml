@@ -2,16 +2,15 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: kobo
-  namespace: kobo
 spec:
   rules:
-    - host: kobo.shopnoltd.dpdns.org
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: kpi
-                port:
-                  number: 80
+  - host: kobo.shopnoltd.dpdns.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: kpi
+            port:
+              number: 80

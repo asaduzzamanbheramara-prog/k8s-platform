@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: kobo-postgres
-  namespace: kobo
 spec:
   serviceName: kobo-postgres
   replicas: 1
@@ -15,14 +14,17 @@ spec:
         app: kobo-postgres
     spec:
       containers:
-        - name: postgres
-          image: postgres:14
-          env:
-            - name: POSTGRES_DB
-              value: kobo
-            - name: POSTGRES_USER
-              value: kobo
-            - name: POSTGRES_PASSWORD
-              value: change_me
-          ports:
-            - containerPort: 5432
+      - name: postgres
+        image: postgres:15
+        env:
+        - name: POSTGRES_DB
+          value: kobo
+        - name: POSTGRES_USER
+          value: kobo
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: kobo-db-secret
+              key: password
+        ports:
+        - containerPort: 5432

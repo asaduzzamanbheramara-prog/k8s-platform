@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kpi
+  namespace: kobo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kpi
+  template:
+    metadata:
+      labels:
+        app: kpi
+    spec:
+      containers:
+        - name: kpi
+          image: kobotoolbox/kpi:2.026.13a
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DJANGO_SETTINGS_MODULE
+              value: kobo.settings.default
+            - name: DATABASE_URL
+              value: postgresql://kobo:kobo_password@kobo-postgres:5432/kobo
+            - name: CELERY_BROKER_URL
+              value: redis://kobo-redis:6379/0
+            - name: PYTHONPATH
+              value: /srv/src
+            - name: DISABLE_COLLECTSTATIC
+              value: "1"
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              set -e
+              echo "Starting KPI safely..."
+              mkdir -p /srv/src/kobocat/media || true
+              mkdir -p /srv/src/kpi/media || true
+              exec /srv/init/start.bash || \
+              exec gunicorn kobo.wsgi:application --bind 0.0.0.0:8000

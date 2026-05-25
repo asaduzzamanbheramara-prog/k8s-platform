@@ -3,9 +3,13 @@ kind: Service
 metadata:
   name: kpi
   namespace: kobo
+
 spec:
   selector:
     app: kpi
+
   ports:
     - port: 80
       targetPort: 8000
+
+  type: ClusterIP

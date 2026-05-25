@@ -1,25 +1,64 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: kpi
   namespace: kobo
+
 spec:
   replicas: 1
+
   selector:
     matchLabels:
       app: kpi
+
   template:
     metadata:
       labels:
         app: kpi
+
     spec:
       containers:
         - name: kpi
-          image: kobotoolbox/kpi:latest
-          env:
-            - name: DJANGO_SETTINGS_MODULE
-              value: kobo.settings.override
-            - name: DATABASE_URL
-              value: postgresql://kobo:change_me@kobo-postgres:5432/kpi
+          image: kobotoolbox/kpi:2.026.13a
+
+          workingDir: /srv/src/kpi
+
+          command:
+            - bash
+            - -c
+
+          args:
+            - |
+              set -e
+
+              echo "Applying Kobo runtime settings patch..."
+
+              if ! grep -q "ALLOWED_HOSTS = \['\*'\]" /srv/src/kpi/kobo/settings/__init__.py; then
+                echo "" >> /srv/src/kpi/kobo/settings/__init__.py
+                echo "ALLOWED_HOSTS = ['*']" >> /srv/src/kpi/kobo/settings/__init__.py
+                echo "DEBUG = True" >> /srv/src/kpi/kobo/settings/__init__.py
+              fi
+
+              export PYTHONPATH=/srv/src/kpi
+              export DJANGO_SETTINGS_MODULE=kobo.settings
+
+              echo "Starting KPI..."
+
+              exec python manage.py runserver 0.0.0.0:8000
+
           ports:
             - containerPort: 8000
+
+          env:
+            - name: PYTHONPATH
+              value: /srv/src/kpi
+
+            - name: DJANGO_SETTINGS_MODULE
+              value: kobo.settings
+
+            - name: DATABASE_URL
+              value: postgresql://kobo:change_me@kobo-postgres.kobo.svc.cluster.local:5432/kpi
+
+            - name: CELERY_BROKER_URL
+              value: redis://kobo-redis.kobo.svc.cluster.local:6379/0
