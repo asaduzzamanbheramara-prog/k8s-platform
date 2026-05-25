@@ -49,18 +49,21 @@ spec:
             - |
               set -e
 
-              echo "🚀 Kobo KPI boot sequence"
+              echo "🚀 Kobo KPI bootstrap FIXED MODE"
 
               export PYTHONPATH=/srv/src/kpi
               export DJANGO_SETTINGS_MODULE=kobo.settings
 
-              echo "Waiting for DB..."
+              # 🔥 FORCE Django DATABASE CONFIG (CRITICAL FIX)
+              export DATABASES='{"default": {"ENGINE": "django.db.backends.postgresql", "NAME": "kobo", "USER": "kobo", "PASSWORD": "kobo_password", "HOST": "kobo-postgres.kobo.svc.cluster.local", "PORT": "5432"}}'
+
+              echo "Waiting for Postgres..."
               sleep 5
 
               echo "Running migrations..."
               python manage.py migrate --noinput
 
-              echo "Starting Gunicorn..."
+              echo "Starting server..."
               exec gunicorn kobo.wsgi:application \
                 --bind 0.0.0.0:8000 \
                 --workers 3 \
