@@ -27,7 +27,7 @@ spec:
 
           env:
             - name: DJANGO_SETTINGS_MODULE
-              value: kobo.settings.production
+              value: kobo.settings
 
             - name: DATABASE_URL
               value: postgresql://kobo:kobo_password@kobo-postgres.kobo.svc.cluster.local:5432/kobo
@@ -36,10 +36,18 @@ spec:
               value: redis://kobo-redis.kobo.svc.cluster.local:6379/0
 
             - name: SECRET_KEY
-              value: super-secret-kobo-key
+              value: "change-this-secret"
 
             - name: ALLOWED_HOSTS
               value: "*"
 
-            - name: DEBUG
-              value: "0"
+          command:
+            - bash
+            - -c
+
+          args:
+            - |
+              echo "Starting Kobo KPI (official mode)..."
+              python manage.py check
+              python manage.py migrate --noinput || true
+              exec gunicorn kobo.wsgi:application --bind 0.0.0.0:8000 --workers 3
