@@ -41,5 +41,4 @@ spec:
             - name: ALLOWED_HOSTS
               value: "*"
 
-          # IMPORTANT: remove ALL custom command/args
-          # Let image run its own entrypoint
+          # IMPORTANT: NO command, NO args
