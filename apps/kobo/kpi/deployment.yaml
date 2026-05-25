@@ -26,11 +26,16 @@ spec:
             - containerPort: 8000
 
           env:
+            # CRITICAL: force correct settings module
             - name: DJANGO_SETTINGS_MODULE
-              value: kobo.settings
+              value: kobo.settings.prod
 
-            - name: PYTHONPATH
-              value: /srv/src/kpi
+            # IMPORTANT: proper postgres URL (must match kobo DB name)
+            - name: DATABASE_URL
+              value: postgresql://kobo:kobo_password@kobo-postgres.kobo.svc.cluster.local:5432/kobo
+
+            - name: CELERY_BROKER_URL
+              value: redis://kobo-redis.kobo.svc.cluster.local:6379/0
 
             - name: SECRET_KEY
               value: super-secret-kobo-key
@@ -38,20 +43,8 @@ spec:
             - name: ALLOWED_HOSTS
               value: "*"
 
-            - name: DATABASE_URL
-              value: postgres://kobo:kobo_password@kobo-postgres.kobo.svc.cluster.local:5432/kobo
-
-            - name: CELERY_BROKER_URL
-              value: redis://kobo-redis.kobo.svc.cluster.local:6379/0
-
-            - name: KOBO_SUPERUSER_USERNAME
-              value: admin
-
-            - name: KOBO_SUPERUSER_PASSWORD
-              value: admin123
-
-            - name: KOBO_SUPERUSER_EMAIL
-              value: admin@shopnoltd.dpdns.org
+            - name: DEBUG
+              value: "0"
 
           command:
             - /bin/bash
@@ -61,19 +54,16 @@ spec:
             - |
               set -e
 
-              echo "Starting Kobo KPI (stable production mode)..."
+              echo "🚀 Starting KPI (fixed config mode)..."
 
               export PYTHONPATH=/srv/src/kpi
-              export DJANGO_SETTINGS_MODULE=kobo.settings
 
-              mkdir -p /srv/src/kpi/media
-              mkdir -p /srv/src/kobocat/media
+              # IMPORTANT: wait for DB
+              echo "Waiting for DB..."
+              sleep 5
 
               echo "Running migrations..."
               python manage.py migrate --noinput
-
-              echo "Collecting static files..."
-              python manage.py collectstatic --noinput || true
 
               echo "Starting Gunicorn..."
               exec gunicorn kobo.wsgi:application \
