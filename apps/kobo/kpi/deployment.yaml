@@ -26,11 +26,9 @@ spec:
             - containerPort: 8000
 
           env:
-            # CRITICAL: force correct settings module
             - name: DJANGO_SETTINGS_MODULE
-              value: kobo.settings.prod
+              value: kobo.settings
 
-            # IMPORTANT: proper postgres URL (must match kobo DB name)
             - name: DATABASE_URL
               value: postgresql://kobo:kobo_password@kobo-postgres.kobo.svc.cluster.local:5432/kobo
 
@@ -43,22 +41,19 @@ spec:
             - name: ALLOWED_HOSTS
               value: "*"
 
-            - name: DEBUG
-              value: "0"
-
           command:
-            - /bin/bash
+            - bash
             - -c
 
           args:
             - |
               set -e
 
-              echo "🚀 Starting KPI (fixed config mode)..."
+              echo "🚀 Kobo KPI boot sequence"
 
               export PYTHONPATH=/srv/src/kpi
+              export DJANGO_SETTINGS_MODULE=kobo.settings
 
-              # IMPORTANT: wait for DB
               echo "Waiting for DB..."
               sleep 5
 
