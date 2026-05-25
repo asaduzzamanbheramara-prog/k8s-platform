@@ -36,7 +36,7 @@ spec:
               value: redis://kobo-redis.kobo.svc.cluster.local:6379/0
 
             - name: SECRET_KEY
-              value: "change-me-very-secret"
+              value: "change-me"
 
             - name: ALLOWED_HOSTS
               value: "*"
@@ -47,8 +47,6 @@ spec:
 
           args:
             - |
-              echo "Waiting for dependencies..."
+              echo "Booting Kobo KPI cleanly..."
               sleep 5
-
-              echo "Running Django via Kobo entrypoint..."
-              exec python manage.py runserver 0.0.0.0:8000
+              exec gunicorn kobo.wsgi:application --bind 0.0.0.0:8000 --workers 2
