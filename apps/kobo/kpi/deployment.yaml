@@ -1,9 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
-
 metadata:
   name: kpi
   namespace: kobo
+  labels:
+    app: kpi
 
 spec:
   replicas: 1
@@ -21,6 +22,7 @@ spec:
       containers:
         - name: kpi
           image: kobotoolbox/kpi:2.026.13a
+          imagePullPolicy: IfNotPresent
 
           ports:
             - containerPort: 8000
@@ -41,4 +43,22 @@ spec:
             - name: ALLOWED_HOSTS
               value: "*"
 
-          # IMPORTANT: NO command, NO args
+          volumeMounts:
+            - name: kpi-media
+              mountPath: /srv/src/kpi/media
+
+            - name: kpi-static
+              mountPath: /srv/src/kpi/static
+
+            - name: kpi-logs
+              mountPath: /srv/src/kpi/logs
+
+      volumes:
+        - name: kpi-media
+          emptyDir: {}
+
+        - name: kpi-static
+          emptyDir: {}
+
+        - name: kpi-logs
+          emptyDir: {}
