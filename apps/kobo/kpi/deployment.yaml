@@ -27,19 +27,19 @@ spec:
 
           env:
             - name: DJANGO_SETTINGS_MODULE
-              value: kobo.settings.production
-
-            - name: DATABASE_URL
-              value: postgres://kobo:kobo_password@kobo-postgres.kobo.svc.cluster.local:5432/kobo
-
-            - name: CELERY_BROKER_URL
-              value: redis://kobo-redis.kobo.svc.cluster.local:6379/0
+              value: kobo.settings
 
             - name: SECRET_KEY
               value: super-secret-kobo-key
 
             - name: ALLOWED_HOSTS
               value: "*"
+
+            - name: DATABASE_URL
+              value: postgres://kobo:kobo_password@kobo-postgres.kobo.svc.cluster.local:5432/kobo
+
+            - name: CELERY_BROKER_URL
+              value: redis://kobo-redis.kobo.svc.cluster.local:6379/0
 
             - name: KOBO_SUPERUSER_USERNAME
               value: admin
@@ -58,14 +58,13 @@ spec:
             - |
               set -e
 
-              echo "Starting Kobo KPI properly..."
+              echo "Preparing Kobo KPI..."
 
               mkdir -p /srv/src/kpi/media
               mkdir -p /srv/src/kobocat/media
 
-              python manage.py migrate --noinput || true
+              export PYTHONPATH=/srv/src/kpi
 
-              exec gunicorn kobo.wsgi:application \
-                --bind 0.0.0.0:8000 \
-                --workers 3 \
-                --timeout 120
+              python manage.py migrate --noinput
+
+              exec python manage.py runserver 0.0.0.0:8000
