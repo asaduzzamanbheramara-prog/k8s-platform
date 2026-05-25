@@ -29,6 +29,9 @@ spec:
             - name: DJANGO_SETTINGS_MODULE
               value: kobo.settings
 
+            - name: PYTHONPATH
+              value: /srv/src/kpi
+
             - name: SECRET_KEY
               value: super-secret-kobo-key
 
@@ -58,13 +61,22 @@ spec:
             - |
               set -e
 
-              echo "Preparing Kobo KPI..."
+              echo "Starting Kobo KPI (stable production mode)..."
+
+              export PYTHONPATH=/srv/src/kpi
+              export DJANGO_SETTINGS_MODULE=kobo.settings
 
               mkdir -p /srv/src/kpi/media
               mkdir -p /srv/src/kobocat/media
 
-              export PYTHONPATH=/srv/src/kpi
-
+              echo "Running migrations..."
               python manage.py migrate --noinput
 
-              exec python manage.py runserver 0.0.0.0:8000
+              echo "Collecting static files..."
+              python manage.py collectstatic --noinput || true
+
+              echo "Starting Gunicorn..."
+              exec gunicorn kobo.wsgi:application \
+                --bind 0.0.0.0:8000 \
+                --workers 3 \
+                --timeout 120
