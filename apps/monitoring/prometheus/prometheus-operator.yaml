@@ -3,7 +3,28 @@ kind: ServiceAccount
 metadata:
   name: prometheus-operator
   namespace: monitoring
-
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheus-operator
+rules:
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["*"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus-operator
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-operator
+    namespace: monitoring
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -15,19 +36,15 @@ spec:
   selector:
     matchLabels:
       app: prometheus-operator
-
   template:
     metadata:
       labels:
         app: prometheus-operator
-
     spec:
       serviceAccountName: prometheus-operator
-
       containers:
         - name: operator
           image: quay.io/prometheus-operator/prometheus-operator:v0.75.0
-
           args:
             - --kubelet-service=kube-system/kubelet
             - --logtostderr=true

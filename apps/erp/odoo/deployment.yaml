@@ -32,10 +32,13 @@ spec:
               value: postgres.erp.svc.cluster.local
 
             - name: USER
-              value: odoo
+              value: erp
 
             - name: PASSWORD
-              value: odooStrongPassword123!
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: password
 
             - name: DB_NAME
               value: erp

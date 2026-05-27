@@ -21,8 +21,8 @@ spec:
     spec:
       containers:
         - name: kpi
-          image: kobotoolbox/kpi:2.026.13a
-          imagePullPolicy: IfNotPresent
+          image: kobotoolbox/kpi:latest
+          imagePullPolicy: Always
 
           workingDir: /srv/src/kpi
 
@@ -33,8 +33,14 @@ spec:
             - name: DJANGO_SETTINGS_MODULE
               value: kobo.settings.production
 
+            - name: KOBO_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: kobo-db-secret
+                  key: password
+
             - name: DATABASE_URL
-              value: postgres://kobo:kobo_password@kobo-postgres.kobo.svc.cluster.local:5432/kobo
+              value: postgres://kobo:$(KOBO_DB_PASSWORD)@kobo-postgres.kobo.svc.cluster.local:5432/kobo
 
             - name: CELERY_BROKER_URL
               value: redis://kobo-redis.kobo.svc.cluster.local:6379/0
@@ -44,6 +50,12 @@ spec:
 
             - name: ALLOWED_HOSTS
               value: "*"
+
+            - name: KOBOCAT_URL
+              value: http://kobocat.kobo.svc.cluster.local
+
+            - name: KOBOCAT_INTERNAL_URL
+              value: http://kobocat.kobo.svc.cluster.local
 
           volumeMounts:
             - name: kpi-media
@@ -55,6 +67,9 @@ spec:
             - name: kpi-logs
               mountPath: /srv/src/kpi/logs
 
+            - name: kobocat-media
+              mountPath: /srv/src/kobocat/media
+
       volumes:
         - name: kpi-media
           emptyDir: {}
@@ -63,4 +78,7 @@ spec:
           emptyDir: {}
 
         - name: kpi-logs
+          emptyDir: {}
+
+        - name: kobocat-media
           emptyDir: {}

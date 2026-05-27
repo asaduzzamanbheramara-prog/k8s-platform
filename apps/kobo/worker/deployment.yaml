@@ -19,7 +19,8 @@ spec:
     spec:
       containers:
         - name: worker
-          image: kobotoolbox/kpi:2.026.13a
+          image: kobotoolbox/kpi:latest
+          imagePullPolicy: Always
 
           workingDir: /srv/src/kpi
 
@@ -34,13 +35,19 @@ spec:
 
           env:
             - name: DJANGO_SETTINGS_MODULE
-              value: kobo.settings
+              value: kobo.settings.production
 
             - name: PYTHONPATH
               value: /srv/src/kpi
 
+            - name: KOBO_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: kobo-db-secret
+                  key: password
+
             - name: DATABASE_URL
-              value: postgresql://kobo:change_me@kobo-postgres.kobo.svc.cluster.local:5432/kpi
+              value: postgres://kobo:$(KOBO_DB_PASSWORD)@kobo-postgres.kobo.svc.cluster.local:5432/kobo
 
             - name: CELERY_BROKER_URL
               value: redis://kobo-redis.kobo.svc.cluster.local:6379/0
