@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: redis-main
+  namespace: kobo
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: redis-main
+
+  template:
+    metadata:
+      labels:
+        app: redis-main
+
+    spec:
+      containers:
+        - name: redis
+          image: redis:7.2-alpine
+
+          args:
+            - redis-server
+            - --requirepass
+            - $(REDIS_PASSWORD)
+
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: kobo-secrets
+                  key: REDIS_PASSWORD
+
+          ports:
+            - containerPort: 6379

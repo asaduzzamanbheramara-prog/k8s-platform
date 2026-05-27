@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dovecot
+  namespace: mail
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: dovecot
+
+  template:
+    metadata:
+      labels:
+        app: dovecot
+
+    spec:
+      containers:
+        - name: dovecot
+          image: dovecot/dovecot:2.3.21
+
+          command: ["dovecot"]
+          args: ["-F"]
+
+          ports:
+            - containerPort: 143
+
+          volumeMounts:
+            - name: config
+              mountPath: /etc/dovecot/dovecot.conf
+              subPath: dovecot.conf
+
+            - name: users
+              mountPath: /etc/dovecot/users
+              subPath: users
+
+            - name: maildata
+              mountPath: /mail
+
+      volumes:
+        - name: config
+          configMap:
+            name: dovecot-config
+
+        - name: users
+          configMap:
+            name: dovecot-users
+
+        - name: maildata
+          emptyDir: {}
