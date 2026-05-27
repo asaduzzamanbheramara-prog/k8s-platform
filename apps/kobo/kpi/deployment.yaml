@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: kpi
-          image: kobotoolbox/kpi:2.024.40
+          image: kobotoolbox/kpi:2.026.13a
           imagePullPolicy: IfNotPresent
 
           workingDir: /srv/src/kpi
