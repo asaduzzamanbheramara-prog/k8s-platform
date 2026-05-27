@@ -20,8 +20,8 @@ spec:
     spec:
       containers:
         - name: kobocat
-          image: kobotoolbox/kobocat:latest
-          imagePullPolicy: Always
+          image: kobotoolbox/kobo-kobocat:2.024.40
+          imagePullPolicy: IfNotPresent
 
           ports:
             - containerPort: 8000

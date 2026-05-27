@@ -1,5 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: kpi
   namespace: kobo
@@ -21,8 +22,8 @@ spec:
     spec:
       containers:
         - name: kpi
-          image: kobotoolbox/kpi:latest
-          imagePullPolicy: Always
+          image: kobotoolbox/kobo-kpi:2.024.40
+          imagePullPolicy: IfNotPresent
 
           workingDir: /srv/src/kpi
 

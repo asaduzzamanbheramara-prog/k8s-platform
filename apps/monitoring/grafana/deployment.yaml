@@ -1,54 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
-
 metadata:
-  name: grafana
+  name: prometheus-operator
   namespace: monitoring
-
 spec:
   replicas: 1
-
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
-
   selector:
     matchLabels:
-      app: grafana
-
+      app: prometheus-operator
   template:
     metadata:
       labels:
-        app: grafana
-
+        app: prometheus-operator
     spec:
-      terminationGracePeriodSeconds: 30
-
+      serviceAccountName: prometheus-operator
       containers:
-        - name: grafana
-          image: grafana/grafana:11.0.0
-
+        - name: operator
+          image: quay.io/prometheus-operator/prometheus-operator:v0.75.0
+          args:
+            - --kubelet-service=kube-system/kubelet
+            - --log-level=info
           ports:
-            - containerPort: 3000
-
-          env:
-            - name: GF_SECURITY_ADMIN_PASSWORD
-              value: admin123
-
+            - containerPort: 8080
+              name: http
           resources:
             requests:
-              cpu: "200m"
-              memory: "256Mi"
+              cpu: "100m"
+              memory: "128Mi"
             limits:
-              cpu: "1"
-              memory: "1Gi"
-
-          volumeMounts:
-            - name: grafana-storage
-              mountPath: /var/lib/grafana
-
-      volumes:
-        - name: grafana-storage
-          emptyDir: {}
+              cpu: "500m"
+              memory: "512Mi"
