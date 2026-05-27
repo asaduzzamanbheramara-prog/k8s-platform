@@ -3,7 +3,7 @@ kind: Deployment
 
 metadata:
   name: livekit
-  namespace: realtime
+  namespace: webrtc
 
 spec:
   replicas: 1
