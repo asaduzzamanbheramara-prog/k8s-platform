@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kobo-redis
+  namespace: kobo
+spec:
+  selector:
+    app: kobo-redis
+  ports:
+    - port: 6379
+      targetPort: 6379
