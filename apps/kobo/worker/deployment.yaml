@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: worker
-          image: kobotoolbox/kobo-kpi:2.024.40
+          image: kobotoolbox/kpi:2.024.40
           imagePullPolicy: IfNotPresent
 
           workingDir: /srv/src/kpi
