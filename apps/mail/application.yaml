@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mail
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://gitlab.com/asaduzzaman.bheramara-group/k8s-platform.git
+    targetRevision: main
+    path: apps/mail
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: mail
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
