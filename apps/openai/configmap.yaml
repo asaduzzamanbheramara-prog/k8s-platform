@@ -7,3 +7,4 @@ data:
   mode: "cursor-ai"
   editor: "monaco"
   features: "code-completion,agent,debugger"
+  REQUIRE_AUTH: "false"
