@@ -1,0 +1,12 @@
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - api-v1.yaml
+  - web-v1.yaml
+  - workspace.yaml
+  - sandbox.yaml
+  - ingress.yaml
+  - api-service.yaml
+  - web-service.yaml
+  - workspace-service.yaml
+  - sandbox-service.yaml

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cursor-config
+  namespace: cursor
+data:
+  ENV: "production"
