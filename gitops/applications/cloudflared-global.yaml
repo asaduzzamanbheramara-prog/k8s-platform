@@ -5,4 +5,6 @@ metadata:
   namespace: kube-system
 type: Opaque
 stringData:
-  TUNNEL_TOKEN: "eyJhIjoiYjkxNTk0ZmQ1NjBjNThhMDljNDNmZGNiNzA3NTI5NzEiLCJ0IjoiNWQ2ZTAzN2EtN2MwOS00Nzg4LTg1MzItMTFkYmE1ZmMxYTcyIiwicyI6Ik0ySmlZbUV5WXpjdFpEQmhPQzAwTjJWa0xXRXpZall0Tm1FeE56SmpabUk0TnpZMCJ9"
+  # Replace this placeholder with your Cloudflare Tunnel token.
+  # Do not commit the real token to source control.
+  TUNNEL_TOKEN: "REPLACE_WITH_YOUR_CLOUDFLARE_TUNNEL_TOKEN"

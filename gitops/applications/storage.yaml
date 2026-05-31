@@ -2,20 +2,20 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 
 metadata:
-  name: gitops-root
+  name: storage
   namespace: argocd
 
 spec:
-  project: default
+  project: platform
 
   source:
     repoURL: https://github.com/asaduzzamanbheramara-prog/k8s-platform.git
     targetRevision: main
-    path: gitops/root
+    path: apps/storage
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: storage
 
   syncPolicy:
     automated:
@@ -24,4 +24,3 @@ spec:
 
     syncOptions:
       - CreateNamespace=true
-      - ServerSideApply=true

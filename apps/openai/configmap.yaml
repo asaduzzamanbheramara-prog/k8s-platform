@@ -1,10 +1,29 @@
 apiVersion: v1
 kind: ConfigMap
+
 metadata:
   name: cursor-config
+  namespace: openai
 
 data:
   mode: "cursor-ai"
+
   editor: "monaco"
+
   features: "code-completion,agent,debugger"
-  REQUIRE_AUTH: "false"
+
+  REQUIRE_AUTH: "true"
+
+  REDIS_URL: "redis://argocd-redis.argocd.svc.cluster.local:6379"
+
+  CONVERSATION_TTL_HOURS: "72"
+
+  RATE_LIMIT_PER_MINUTE: "120"
+
+  OPENAI_MODEL: "gpt-4o-mini"
+
+  OPENAI_TEMPERATURE: "0.7"
+
+  OPENAI_MAX_TOKENS: "4096"
+
+  CORS_ORIGINS: "https://shopnoltd.dpdns.org,https://www.shopnoltd.dpdns.org,https://openai.shopnoltd.dpdns.org,https://api.shopnoltd.dpdns.org,https://billing.shopnoltd.dpdns.org,https://erp.shopnoltd.dpdns.org,https://chat.shopnoltd.dpdns.org,https://meet.shopnoltd.dpdns.org,https://live.shopnoltd.dpdns.org,https://kobo.shopnoltd.dpdns.org,https://cursor.shopnoltd.dpdns.org,https://argocd.shopnoltd.dpdns.org,https://portainer.shopnoltd.dpdns.org,https://grafana.shopnoltd.dpdns.org,https://prometheus.shopnoltd.dpdns.org,https://storage.shopnoltd.dpdns.org,https://kf.shopnoltd.dpdns.org,https://kc.shopnoltd.dpdns.org,https://ee.shopnoltd.dpdns.org,https://kpi.shopnoltd.dpdns.org,https://mail.shopnoltd.dpdns.org"
