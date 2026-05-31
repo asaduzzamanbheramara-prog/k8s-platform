@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kpi
+  namespace: kobo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kpi
+  template:
+    metadata:
+      labels:
+        app: kpi
+    spec:
+      containers:
+        - name: kpi
+          image: hashicorp/http-echo
+          args:
+            - "-text=KPI placeholder"
+            - "-listen=:8000"
+          ports:
+            - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kpi
+  namespace: kobo
+spec:
+  selector:
+    app: kpi
+  ports:
+    - port: 8000
+      targetPort: 8000
+  type: ClusterIP

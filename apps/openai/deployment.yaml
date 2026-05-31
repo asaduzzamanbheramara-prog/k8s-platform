@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cursor-ai-backend
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: cursor-ai-backend
+
+  template:
+    metadata:
+      labels:
+        app: cursor-ai-backend
+
+    spec:
+      containers:
+        - name: backend
+          image: nginx:alpine
+
+          ports:
+            - containerPort: 80
+
+          env:
+            - name: MODE
+              value: "cursor-ai"
+
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"

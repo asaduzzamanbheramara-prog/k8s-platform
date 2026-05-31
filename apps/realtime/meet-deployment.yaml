@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: meet
+  namespace: realtime
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: meet
+
+  template:
+    metadata:
+      labels:
+        app: meet
+
+    spec:
+      containers:
+        - name: meet
+          image: nginx:stable
+
+          ports:
+            - containerPort: 8080

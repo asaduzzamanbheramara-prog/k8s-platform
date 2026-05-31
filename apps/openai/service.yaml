@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cursor-ai-backend
+
+spec:
+  selector:
+    app: cursor-ai-backend
+
+  ports:
+    - port: 80
+      targetPort: 80
+
+  type: ClusterIP

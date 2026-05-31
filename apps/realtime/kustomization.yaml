@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - chat-deployment.yaml
+  - chat-service.yaml
+
+  - meet-deployment.yaml
+  - meet-service.yaml
+
+  - live-deployment.yaml
+  - live-service.yaml

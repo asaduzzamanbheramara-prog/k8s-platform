@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: live
+  namespace: realtime
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: live
+
+  template:
+    metadata:
+      labels:
+        app: live
+
+    spec:
+      containers:
+        - name: live
+          image: nginx:stable
+
+          ports:
+            - containerPort: 3000
