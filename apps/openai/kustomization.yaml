@@ -10,8 +10,9 @@ resources:
   - configmap.yaml
   - secrets.yaml
 
-commonLabels:
-  app: cursor-ai-system
+labels:
+  - pairs:
+      app: cursor-ai-system
 
 commonAnnotations:
   system: "cursor-like-ai-platform"

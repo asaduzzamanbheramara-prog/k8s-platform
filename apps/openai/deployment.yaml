@@ -1,7 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: cursor-ai-backend
+  namespace: openai
 
 spec:
   replicas: 1
@@ -23,14 +25,18 @@ spec:
           ports:
             - containerPort: 80
 
-          env:
-            - name: MODE
-              value: "cursor-ai"
+          envFrom:
+            - configMapRef:
+                name: openai-config
+
+            - secretRef:
+                name: openai-secret
 
           resources:
             requests:
-              memory: "256Mi"
-              cpu: "200m"
+              cpu: 200m
+              memory: 256Mi
+
             limits:
-              memory: "512Mi"
-              cpu: "500m"
+              cpu: 500m
+              memory: 512Mi
