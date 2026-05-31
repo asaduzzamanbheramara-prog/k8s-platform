@@ -3,9 +3,10 @@ kind: Ingress
 
 metadata:
   name: cursor
+  namespace: cursor
 
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
 
   rules:
     - host: cursor.shopnoltd.dpdns.org
