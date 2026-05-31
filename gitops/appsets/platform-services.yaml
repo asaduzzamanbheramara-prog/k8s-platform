@@ -33,6 +33,9 @@ spec:
           - name: openai
             path: apps/openai
 
+          - name: cursor
+            path: apps/cursor
+
   template:
     metadata:
       name: '{{name}}'

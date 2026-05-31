@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+
+metadata:
+  name: cursor
+  namespace: argocd
+
+spec:
+  project: platform
+
+  source:
+    repoURL: https://github.com/asaduzzamanbheramara-prog/k8s-platform.git
+    targetRevision: main
+    path: apps/cursor
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cursor
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
