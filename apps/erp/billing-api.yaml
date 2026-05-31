@@ -3,35 +3,44 @@ kind: Deployment
 metadata:
   name: billing-api
   namespace: erp
+
 spec:
   replicas: 1
+
   selector:
     matchLabels:
       app: billing-api
+
   template:
     metadata:
       labels:
         app: billing-api
+
     spec:
       containers:
         - name: billing-api
           image: hashicorp/http-echo
+
           args:
-            - "-text=<html><head><title>Shopno Database Firm Billing</title></head><body style=\"font-family:Arial,sans-serif;background:#fff8f0;color:#2b1400;margin:0;padding:40px;\"><div style=\"max-width:720px;margin:auto;padding:30px;background:#ffffff;border-radius:16px;box-shadow:0 18px 60px rgba(74,51,0,.08);\"><h1 style=\"color:#8f4f04;\">Shopno Database Firm Billing System</h1><p style=\"font-size:18px;line-height:1.6;\">Your billing portal is live at <strong>billing.shopnoltd.dpdns.org</strong>.</p><p style=\"font-size:16px;line-height:1.6;\">This service is part of the Shopno Database Firm platform and exposes billing operations through the ERP ingress.</p></div></body></html>"
-            - "-headers=Content-Type:text/html"
+            - "-text=Shopno Database Firm Billing System"
             - "-listen=:8080"
+
           ports:
             - containerPort: 8080
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: billing-api
   namespace: erp
+
 spec:
   selector:
     app: billing-api
+
   ports:
     - port: 8080
       targetPort: 8080
+
   type: ClusterIP
