@@ -21,7 +21,7 @@ spec:
       containers:
         - name: backend
 
-          image: shopnoltd/openai-service:latest
+          image: zamanasad/openai-service:latest
 
           imagePullPolicy: Always
 
