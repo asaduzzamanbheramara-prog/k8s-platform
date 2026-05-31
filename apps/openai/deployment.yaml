@@ -27,7 +27,7 @@ spec:
 
           envFrom:
             - configMapRef:
-                name: openai-config
+                name: cursor-config
 
             - secretRef:
                 name: openai-secret
