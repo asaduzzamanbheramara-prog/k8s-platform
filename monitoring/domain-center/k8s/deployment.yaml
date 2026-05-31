@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: domain-center
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: domain-center
+  template:
+    metadata:
+      labels:
+        app: domain-center
+    spec:
+      serviceAccountName: domain-center
+      containers:
+      - name: api
+        image: domain-center:latest
+        ports:
+        - containerPort: 8080

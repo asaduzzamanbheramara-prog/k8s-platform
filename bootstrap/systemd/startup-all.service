@@ -1,0 +1,12 @@
+[Unit]
+Description=Start platform services (Docker, cloudflared, k3s) and run checks
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/home/shopno/k8s-platform/bootstrap/auto_start_wsl.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

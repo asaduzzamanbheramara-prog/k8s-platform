@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Domain Control Center</title>
+<style>
+body { background:#0f172a; color:white; font-family:Arial; }
+table { width:100%; border-collapse: collapse; }
+td,th { border:1px solid #334155; padding:10px; }
+.ok { color:lime; }
+.bad { color:red; }
+.warn { color:orange; }
+</style>
+</head>
+<body>
+
+<h1>🌐 Domain Control Center</h1>
+
+<table>
+<thead>
+<tr><th>Domain</th><th>Status</th><th>Open</th></tr>
+</thead>
+<tbody id="data"></tbody>
+</table>
+
+<script>
+async function load(){
+  const res = await fetch("/api/status");
+  const data = await res.json();
+
+  let html = "";
+
+  data.forEach(d => {
+    let cls = "ok";
+    if(d.status == "DOWN" || d.status == "503") cls = "bad";
+    else if(d.status == "301" || d.status == "308") cls = "warn";
+
+    html += `<tr>
+      <td>${d.domain}</td>
+      <td class="${cls}">${d.status}</td>
+      <td><a href="https://${d.domain}" target="_blank">Open</a></td>
+    </tr>`;
+  });
+
+  document.getElementById("data").innerHTML = html;
+}
+
+load();
+setInterval(load, 30000);
+</script>
+
+</body>
+</html>

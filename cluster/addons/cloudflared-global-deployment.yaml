@@ -31,10 +31,10 @@ spec:
 
           args:
             - tunnel
-            - --no-autoupdate
-            - run
             - --config
             - /etc/cloudflared/config/config.yaml
+            - --no-autoupdate
+            - run
 
           volumeMounts:
             - name: config

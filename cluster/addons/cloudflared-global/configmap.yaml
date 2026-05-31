@@ -97,6 +97,12 @@ data:
         service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
 
       # =========================================
+      # OPENAI
+      # =========================================
+      - hostname: openai.shopnoltd.dpdns.org
+        service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+
+      # =========================================
       # WILDCARD
       # =========================================
       - hostname: "*.shopnoltd.dpdns.org"

@@ -1,0 +1,255 @@
+# Sample Kubernetes Service Manifests
+# Use these as templates for creating the backend services
+
+---
+# KOBO - Kobocat Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: kobocat
+  namespace: kobo
+spec:
+  selector:
+    app: kobocat
+  ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+  type: ClusterIP
+
+---
+# KOBO - KPI Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: kpi
+  namespace: kobo
+spec:
+  selector:
+    app: kpi
+  ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+  type: ClusterIP
+
+---
+# ERP - ERP API Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: erp-api
+  namespace: erp
+spec:
+  selector:
+    app: erp-api
+  ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+  type: ClusterIP
+
+---
+# ERP - Billing API Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: billing-api
+  namespace: erp
+spec:
+  selector:
+    app: billing-api
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+  type: ClusterIP
+
+---
+# MAIL - Mail Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: mail-service
+  namespace: mail
+spec:
+  selector:
+    app: mail
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  type: ClusterIP
+
+---
+# STORAGE - Storage Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: storage-service
+  namespace: storage
+spec:
+  selector:
+    app: storage
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  type: ClusterIP
+
+---
+# MONITORING - Grafana Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  selector:
+    app: grafana
+  ports:
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP
+  type: ClusterIP
+
+---
+# MONITORING - Prometheus Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  selector:
+    app: prometheus
+  ports:
+    - port: 9090
+      targetPort: 9090
+      protocol: TCP
+  type: ClusterIP
+
+---
+# PORTAINER - Portainer Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: portainer
+  namespace: portainer
+spec:
+  selector:
+    app: portainer
+  ports:
+    - port: 9000
+      targetPort: 9000
+      protocol: TCP
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+  type: ClusterIP
+
+---
+# REALTIME - Chat Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat-service
+  namespace: realtime
+spec:
+  selector:
+    app: chat
+  ports:
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP
+  type: ClusterIP
+
+---
+# REALTIME - Meet Service (Jitsi, Mattermost, etc.)
+apiVersion: v1
+kind: Service
+metadata:
+  name: meet-service
+  namespace: realtime
+spec:
+  selector:
+    app: meet
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+  type: ClusterIP
+
+---
+# REALTIME - Live Streaming Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: live-service
+  namespace: realtime
+spec:
+  selector:
+    app: live
+  ports:
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP
+  type: ClusterIP
+
+---
+# ARGOCD - Root App Service (for root domain)
+apiVersion: v1
+kind: Service
+metadata:
+  name: root-app
+  namespace: argocd
+spec:
+  selector:
+    app: root-app
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+  type: ClusterIP
+
+---
+# Sample Nginx Deployment (test/placeholder)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-app
+  namespace: kobo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-app
+  template:
+    metadata:
+      labels:
+        app: test-app
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: SERVICE_NAME
+          value: "test-service"
+
+---
+# Service for test app
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-app
+  namespace: kobo
+spec:
+  selector:
+    app: test-app
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  type: ClusterIP

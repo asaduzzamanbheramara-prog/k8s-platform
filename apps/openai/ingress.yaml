@@ -6,7 +6,7 @@ metadata:
   namespace: openai
 
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
 
   rules:
     - host: openai.shopnoltd.dpdns.org
