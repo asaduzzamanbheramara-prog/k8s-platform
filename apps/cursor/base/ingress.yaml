@@ -1,7 +1,8 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 
-git add apps/cursor/base/ingress.yamlapiVersion: networking.k8s.io/v1 kind: Ingress git commit -m "Fix cursor 
-ingress backend service" metadata:
-git push origin main  name: cursor
+metadata:
+  name: cursor
 
 spec:
   ingressClassName: nginx
