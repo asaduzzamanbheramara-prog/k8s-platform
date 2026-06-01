@@ -2,35 +2,15 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: root-ingress
-  namespace: argocd
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
-  ingressClassName: traefik
-  tls:
-    - hosts:
-        - shopnoltd.dpdns.org
-        - www.shopnoltd.dpdns.org
-      secretName: root-tls
   rules:
-    - host: shopnoltd.dpdns.org
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: root-app
-                port:
-                  number: 80
-    - host: www.shopnoltd.dpdns.org
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: root-app
-                port:
-                  number: 80
+  - host: shopnoltd.dpdns.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: root
+            port:
+              number: 80

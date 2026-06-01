@@ -1,16 +1,16 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: cursor-ingress
+  name: billing-ingress
 spec:
   rules:
-  - host: cursor.shopnoltd.dpdns.org
+  - host: billing.shopnoltd.dpdns.org
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: cursor
+            name: erp
             port:
               number: 80

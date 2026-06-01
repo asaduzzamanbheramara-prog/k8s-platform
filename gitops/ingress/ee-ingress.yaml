@@ -1,16 +1,16 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: cursor-ingress
+  name: ee-ingress
 spec:
   rules:
-  - host: cursor.shopnoltd.dpdns.org
+  - host: ee.shopnoltd.dpdns.org
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: cursor
+            name: kf
             port:
               number: 80
