@@ -1,0 +1,26 @@
+platform:
+  name: ShopnoltdToolbox
+  type: kubernetes-gitops-suite
+
+branding:
+  logo: /static/custom/shopnoltdlogo.png
+  theme: dark
+  primary_color: "#0f172a"
+
+domains:
+  root: shopnoltd.dpdns.org
+  wildcard: "*.shopnoltd.dpdns.org"
+
+ui:
+  title: ShopnoltdToolbox Platform
+  subtitle: Unified Cloud & ERP Stack
+
+modules:
+  root: Dashboard
+  kf: Forms System
+  kc: Data Engine
+  kpi: Analytics Engine
+  erp: Business Suite
+  openai: AI Gateway
+  monitoring: Observability Stack
+  realtime: Communication Layer

@@ -1,0 +1,51 @@
+domains:
+
+  root:
+    host: shopnoltd.dpdns.org
+    service: root
+
+  www:
+    host: www.shopnoltd.dpdns.org
+    service: root
+
+  kpi:
+    host: kpi.shopnoltd.dpdns.org
+    service: kpi
+
+  kf:
+    host: kf.shopnoltd.dpdns.org
+    service: kf
+
+  kc:
+    host: kc.shopnoltd.dpdns.org
+    service: kc
+
+  ee:
+    host: ee.shopnoltd.dpdns.org
+    service: kf
+
+  erp:
+    host: erp.shopnoltd.dpdns.org
+    service: erp
+
+  billing:
+    host: billing.shopnoltd.dpdns.org
+    service: erp
+
+  openai:
+    host: openai.shopnoltd.dpdns.org
+    service: openai
+
+  cursor:
+    host: cursor.shopnoltd.dpdns.org
+    service: cursor
+
+  monitoring:
+    grafana: grafana.shopnoltd.dpdns.org
+    prometheus: prometheus.shopnoltd.dpdns.org
+
+  realtime:
+    chat: chat.shopnoltd.dpdns.org
+    meet: meet.shopnoltd.dpdns.org
+    live: live.shopnoltd.dpdns.org
+

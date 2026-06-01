@@ -1,0 +1,92 @@
+# Shopnoltd Platform - Namespace Configuration
+# Defines all Kubernetes namespaces and their labels
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: toolbox
+  labels:
+    app: "shopnoltd-toolbox"
+    component: "survey"
+    environment: "production"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: erp
+  labels:
+    app: "erp"
+    component: "business"
+    environment: "production"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: communication
+  labels:
+    app: "communication"
+    component: "messaging"
+    environment: "production"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: storage
+  labels:
+    app: "storage"
+    component: "data"
+    environment: "production"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+  labels:
+    app: "monitoring"
+    component: "observability"
+    environment: "production"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ai
+  labels:
+    app: "openai"
+    component: "intelligence"
+    environment: "production"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: realtime
+  labels:
+    app: "realtime"
+    component: "services"
+    environment: "production"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: development
+  labels:
+    app: "development"
+    component: "tools"
+    environment: "production"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: queue
+  labels:
+    app: "queue"
+    component: "messaging"
+    environment: "production"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mail
+  labels:
+    app: "mail"
+    component: "messaging"
+    environment: "production"

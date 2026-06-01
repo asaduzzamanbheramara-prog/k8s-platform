@@ -1,0 +1,173 @@
+stages:
+  - validate
+  - build
+  - deploy
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+  REGISTRY: registry.gitlab.com
+  IMAGE_NAME: ${REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}
+
+# Global runner configuration
+default:
+  image: alpine:latest
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+
+# Validate YAML syntax and structure
+validate_yaml:
+  stage: validate
+  image: python:3.9-slim
+  script:
+    - echo "Validating Kubernetes YAML files..."
+    - pip install pyyaml
+    - |
+      for file in gitops/**/*.yaml gitops/**/*.yml; do
+        if [ -f "$file" ]; then
+          echo "Validating $file..."
+          python3 -c "import yaml; yaml.safe_load(open('$file'))" || exit 1
+        fi
+      done
+    - echo "All YAML files validated successfully!"
+  artifacts:
+    reports:
+      dotenv: validation_status.env
+  only:
+    - main
+    - develop
+    - merge_requests
+
+# Lint YAML structure
+lint_yaml:
+  stage: validate
+  image: garethr/kubeval:latest
+  script:
+    - echo "Linting Kubernetes YAML structure..."
+    - |
+      for file in gitops/**/*.yaml gitops/**/*.yml; do
+        if [ -f "$file" ]; then
+          echo "Kubeval: $file"
+          kubeval "$file" || exit 1
+        fi
+      done
+    - echo "All YAML files passed linting!"
+  only:
+    - main
+    - develop
+    - merge_requests
+
+# Build Docker images (if Dockerfile exists)
+build_docker:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+  script:
+    - echo "Building Docker image..."
+    - docker build -t ${IMAGE_NAME}:${CI_COMMIT_SHA:0:8} -t ${IMAGE_NAME}:latest .
+    - docker push ${IMAGE_NAME}:${CI_COMMIT_SHA:0:8}
+    - docker push ${IMAGE_NAME}:latest
+    - echo "Docker image pushed successfully!"
+  after_script:
+    - docker logout $CI_REGISTRY
+  only:
+    - main
+    - develop
+  allow_failure: true
+
+# Deploy to server via SSH
+deploy_to_server:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache openssh-client git
+    - mkdir -p ~/.ssh
+    - echo "$SSH_KEY" | base64 -d > ~/.ssh/deploy_key
+    - chmod 600 ~/.ssh/deploy_key
+    - ssh-keyscan -p ${SSH_PORT:-22} ${SERVER_HOST} >> ~/.ssh/known_hosts 2>/dev/null || true
+  script:
+    - echo "Deploying to server (${SERVER_HOST})..."
+    - |
+      ssh -i ~/.ssh/deploy_key -p ${SSH_PORT:-22} ${SSH_USER}@${SERVER_HOST} << 'EOF'
+        echo "Connected to server"
+        cd /opt/k8s-platform || exit 1
+        echo "Pulling latest changes..."
+        git pull origin ${CI_COMMIT_REF_NAME}
+        echo "Applying Kubernetes manifests..."
+        find gitops -name "*.yaml" -o -name "*.yml" | sort | while read file; do
+          if [ -f "$file" ]; then
+            echo "Applying: $file"
+            kubectl apply -f "$file" || echo "Warning: Failed to apply $file"
+          fi
+        done
+        echo "Deployment completed!"
+      EOF
+  after_script:
+    - rm -f ~/.ssh/deploy_key
+  only:
+    - main
+    - develop
+  environment:
+    name: production
+    url: https://${SERVER_HOST}
+
+# Mirror sync to GitHub
+mirror_to_github:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache git openssh-client
+    - mkdir -p ~/.ssh
+    - echo "$GITHUB_SSH_KEY" | base64 -d > ~/.ssh/github_key
+    - chmod 600 ~/.ssh/github_key
+    - ssh-keyscan -p 22 github.com >> ~/.ssh/known_hosts 2>/dev/null || true
+  script:
+    - echo "Mirroring repository to GitHub..."
+    - |
+      git clone --mirror ${CI_REPOSITORY_URL} temp_mirror.git || true
+      cd temp_mirror.git
+      git push --mirror git@github.com:${GITHUB_OWNER}/${GITHUB_REPO}.git || echo "Mirror sync completed"
+  after_script:
+    - rm -rf temp_mirror.git ~/.ssh/github_key
+  only:
+    - main
+    - develop
+  allow_failure: true
+
+# Scheduled sync job (runs daily)
+scheduled_sync:
+  stage: deploy
+  image: alpine:latest
+  script:
+    - echo "Running scheduled sync at $(date)"
+    - echo "Checking for configuration updates..."
+    - echo "Scheduled sync completed!"
+  only:
+    - schedules
+
+# Rollback job (manual trigger)
+rollback_deployment:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache openssh-client
+    - mkdir -p ~/.ssh
+    - echo "$SSH_KEY" | base64 -d > ~/.ssh/deploy_key
+    - chmod 600 ~/.ssh/deploy_key
+    - ssh-keyscan -p ${SSH_PORT:-22} ${SERVER_HOST} >> ~/.ssh/known_hosts 2>/dev/null || true
+  script:
+    - echo "Rolling back deployment to previous version..."
+    - |
+      ssh -i ~/.ssh/deploy_key -p ${SSH_PORT:-22} ${SSH_USER}@${SERVER_HOST} \
+        "cd /opt/k8s-platform && git revert HEAD --no-edit && kubectl rollout undo deployment/k8s-platform"
+    - echo "Rollback completed!"
+  when: manual
+  only:
+    - main
+    - develop

@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - root-ingress.yaml
+  - toolbox-ingress.yaml
+  - erp-ingress.yaml
+  - realtime-ingress.yaml
+  - monitoring-ingress.yaml
+  - storage-ingress.yaml
+  - ai-ingress.yaml
+  - mail-ingress.yaml
+  - cursor-ingress.yaml
+  - portainer-ingress.yaml
+  - argocd-ingress.yaml

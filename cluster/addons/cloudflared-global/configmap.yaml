@@ -7,7 +7,7 @@ metadata:
 
 data:
   config.yaml: |
-    tunnel: cloudflared-global
+    tunnel: 5d6e037a-7c09-4788-8532-11dba5fc1a72
 
     originRequest:
       connectTimeout: 30s
@@ -19,94 +19,94 @@ data:
       # ROOT DOMAIN
       # =========================================
       - hostname: shopnoltd.dpdns.org
-        service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+        service: http://traefik.kube-system.svc.cluster.local:80
 
       # =========================================
       # www ROOT DOMAIN
       # =========================================
       - hostname: www.shopnoltd.dpdns.org
-        service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+        service: http://traefik.kube-system.svc.cluster.local:80
 
       # =========================================
       # KOBO
       # =========================================
       - hostname: kf.shopnoltd.dpdns.org
-        service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+        service: http://traefik.kube-system.svc.cluster.local:80
 
       - hostname: kc.shopnoltd.dpdns.org
-        service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+        service: http://traefik.kube-system.svc.cluster.local:80
 
       - hostname: ee.shopnoltd.dpdns.org
-        service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+        service: http://traefik.kube-system.svc.cluster.local:80
 
       # =========================================
       # ERP
       # =========================================
       - hostname: erp.shopnoltd.dpdns.org
-        service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+        service: http://traefik.kube-system.svc.cluster.local:80
 
       # =========================================
       # BILLING
       # =========================================
       - hostname: billing.shopnoltd.dpdns.org
-        service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+        service: http://traefik.kube-system.svc.cluster.local:80
 
       # =========================================
       # MAILING
       # =========================================
       - hostname: mail.shopnoltd.dpdns.org
-        service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+        service: http://traefik.kube-system.svc.cluster.local:80
     
       # =========================================
       # STORAGE
       # =========================================
       - hostname: storage.shopnoltd.dpdns.org
-        service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+        service: http://traefik.kube-system.svc.cluster.local:80
 
       # =========================================
       # MONITORING
       # =========================================
       - hostname: grafana.shopnoltd.dpdns.org
-        service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+        service: http://traefik.kube-system.svc.cluster.local:80
 
       - hostname: prometheus.shopnoltd.dpdns.org
-        service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+        service: http://traefik.kube-system.svc.cluster.local:80
 
       # =========================================
       # PORTAINER
       # =========================================
       - hostname: portainer.shopnoltd.dpdns.org
-        service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+        service: http://traefik.kube-system.svc.cluster.local:80
 
       # =========================================
       # ARGOCD
       # =========================================
       - hostname: argocd.shopnoltd.dpdns.org
-        service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+        service: http://traefik.kube-system.svc.cluster.local:80
 
       # =========================================
       # WEBSOCKET / REALTIME
       # =========================================
       - hostname: chat.shopnoltd.dpdns.org
-        service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+        service: http://traefik.kube-system.svc.cluster.local:80
 
       - hostname: meet.shopnoltd.dpdns.org
-        service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+        service: http://traefik.kube-system.svc.cluster.local:80
 
       - hostname: live.shopnoltd.dpdns.org
-        service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+        service: http://traefik.kube-system.svc.cluster.local:80
 
       # =========================================
       # OPENAI
       # =========================================
       - hostname: openai.shopnoltd.dpdns.org
-        service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+        service: http://traefik.kube-system.svc.cluster.local:80
 
       # =========================================
       # WILDCARD
       # =========================================
       - hostname: "*.shopnoltd.dpdns.org"
-        service: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80
+        service: http://traefik.kube-system.svc.cluster.local:80
 
       # =========================================
       # DEFAULT

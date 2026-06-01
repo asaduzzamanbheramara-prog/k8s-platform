@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: erp
+  namespace: erp
+spec:
+  ingressClassName: traefik
+
+  rules:
+  - host: erp.shopnoltd.dpdns.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: erp-api
+            port:
+              number: 8000
+
+  - host: billing.shopnoltd.dpdns.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: billing-api
+            port:
+              number: 8080

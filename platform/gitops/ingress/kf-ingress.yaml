@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kf-ingress
+  namespace: default
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: kf.shopnoltd.dpdns.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: kf
+            port:
+              number: 8000

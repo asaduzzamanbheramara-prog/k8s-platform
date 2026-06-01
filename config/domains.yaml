@@ -1,0 +1,163 @@
+# Shopnoltd Platform - Complete Domain & Subdomain Mapping
+# Last Updated: 2026-06-01
+# Author: Shopnoltd DevOps Team
+
+---
+# Global Domain Configuration
+global:
+  root_domain: "shopnoltd.dpdns.org"
+  tld: "dpdns.org"
+  organization: "Shopnoltd"
+  environment: "production"
+
+# Main Domain
+main:
+  domain: "shopnoltd.dpdns.org"
+  display_name: "Shopnoltd Official Website"
+  description: "Main entry point for Shopnoltd platform"
+  namespace: "default"
+  service: "root-app"
+  port: 80
+  tls: true
+  certificate: "shopnoltd-wildcard-cert"
+
+# Shopnoltd Toolbox Application (Formerly ShopnoltdToolbox)
+applications:
+  shopnoltd-toolbox:
+    enabled: true
+    display_name: "Shopnoltd Toolbox"
+    description: "Data collection and survey management platform"
+    namespace: "toolbox"
+    subdomains:
+      - subdomain: "toolbox"
+        name: "Toolbox Interface"
+        service: "kpi"
+        port: 8000
+        tls: true
+      - subdomain: "api.toolbox"
+        name: "Toolbox API"
+        service: "kpi"
+        port: 8000
+        tls: true
+      - subdomain: "kf"
+        name: "Toolbox Frontend (Legacy)"
+        service: "kpi"
+        port: 8000
+        tls: true
+      - subdomain: "kc"
+        name: "KoboCAT (Legacy)"
+        service: "kobocat"
+        port: 8000
+        tls: true
+      - subdomain: "kpi"
+        name: "KPI (Legacy)"
+        service: "kpi"
+        port: 8000
+        tls: true
+
+  erp:
+    enabled: true
+    display_name: "Enterprise Resource Planning"
+    namespace: "erp"
+    subdomains:
+      - subdomain: "erp"
+        name: "ERP Dashboard"
+        service: "erp-app"
+        port: 8080
+        tls: true
+      - subdomain: "billing"
+        name: "Billing & Invoicing"
+        service: "erp-billing"
+        port: 8000
+        tls: true
+
+  communication:
+    enabled: true
+    display_name: "Communication Services"
+    namespace: "communication"
+    subdomains:
+      - subdomain: "mail"
+        name: "Email Service"
+        service: "mail-service"
+        port: 25
+        tls: true
+      - subdomain: "chat"
+        name: "Chat & Messaging"
+        service: "realtime-chat"
+        port: 3000
+        tls: true
+      - subdomain: "meet"
+        name: "Video Meeting"
+        service: "realtime-meet"
+        port: 443
+        tls: true
+      - subdomain: "live"
+        name: "Live Streaming"
+        service: "realtime-live"
+        port: 443
+        tls: true
+
+  monitoring:
+    enabled: true
+    display_name: "Monitoring & Management"
+    namespace: "monitoring"
+    subdomains:
+      - subdomain: "grafana"
+        name: "Metrics Dashboard"
+        service: "grafana"
+        port: 3000
+        tls: true
+      - subdomain: "prometheus"
+        name: "Prometheus Monitoring"
+        service: "prometheus"
+        port: 9090
+        tls: true
+      - subdomain: "argocd"
+        name: "ArgoCD GitOps"
+        service: "argocd-server"
+        port: 443
+        tls: true
+
+  storage:
+    enabled: true
+    display_name: "Data Storage Services"
+    namespace: "storage"
+    subdomains:
+      - subdomain: "storage"
+        name: "File Storage"
+        service: "storage-service"
+        port: 9000
+        tls: true
+
+  ai:
+    enabled: true
+    display_name: "AI & Intelligence"
+    namespace: "ai"
+    subdomains:
+      - subdomain: "ai"
+        name: "AI Service Interface"
+        service: "openai-service"
+        port: 8000
+        tls: true
+
+  realtime:
+    enabled: true
+    display_name: "Real-time Services"
+    namespace: "realtime"
+    subdomains:
+      - subdomain: "realtime"
+        name: "Real-time Hub"
+        service: "realtime-hub"
+        port: 3000
+        tls: true
+
+  cursor:
+    enabled: true
+    display_name: "Development Tools"
+    namespace: "development"
+    subdomains:
+      - subdomain: "cursor"
+        name: "Cursor Editor"
+        service: "cursor-app"
+        port: 3000
+        tls: true

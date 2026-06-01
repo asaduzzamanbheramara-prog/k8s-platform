@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: root
+  namespace: cursor
+spec:
+  ingressClassName: traefik
+
+  rules:
+  - host: shopnoltd.dpdns.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web-v1
+            port:
+              number: 80
+
+  - host: www.shopnoltd.dpdns.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web-v1
+            port:
+              number: 80

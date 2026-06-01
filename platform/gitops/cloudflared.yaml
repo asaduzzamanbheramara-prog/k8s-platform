@@ -1,0 +1,23 @@
+tunnel: cloudflared-global
+ingress:
+  - hostname: shopnoltd.dpdns.org
+    service: http://traefik.kube-system.svc.cluster.local:80
+  - hostname: www.shopnoltd.dpdns.org
+    service: http://traefik.kube-system.svc.cluster.local:80
+  - hostname: kpi.shopnoltd.dpdns.org
+    service: http://traefik.kube-system.svc.cluster.local:80
+  - hostname: kf.shopnoltd.dpdns.org
+    service: http://traefik.kube-system.svc.cluster.local:80
+  - hostname: kc.shopnoltd.dpdns.org
+    service: http://traefik.kube-system.svc.cluster.local:80
+  - hostname: ee.shopnoltd.dpdns.org
+    service: http://traefik.kube-system.svc.cluster.local:80
+  - hostname: erp.shopnoltd.dpdns.org
+    service: http://traefik.kube-system.svc.cluster.local:80
+  - hostname: billing.shopnoltd.dpdns.org
+    service: http://traefik.kube-system.svc.cluster.local:80
+  - hostname: openai.shopnoltd.dpdns.org
+    service: http://traefik.kube-system.svc.cluster.local:80
+  - hostname: cursor.shopnoltd.dpdns.org
+    service: http://traefik.kube-system.svc.cluster.local:80
+  - service: http_status:404

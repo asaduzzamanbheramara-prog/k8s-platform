@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat
+  namespace: realtime
+spec:
+  template:
+    spec:
+      containers:
+      - name: chat
+        ports:
+        - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: live
+  namespace: realtime
+spec:
+  template:
+    spec:
+      containers:
+      - name: live
+        ports:
+        - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meet
+  namespace: realtime
+spec:
+  template:
+    spec:
+      containers:
+      - name: meet
+        ports:
+        - containerPort: 80

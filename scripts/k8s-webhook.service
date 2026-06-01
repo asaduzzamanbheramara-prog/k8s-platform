@@ -1,0 +1,33 @@
+[Unit]
+Description=Shopnoltd Kubernetes Webhook Server
+Documentation=file:///home/shopno/k8s-platform/docs/WEBHOOK_SETUP.md
+After=network.target
+
+[Service]
+Type=simple
+User=shopno
+Group=shopno
+WorkingDirectory=/home/shopno/k8s-platform
+
+ExecStart=/usr/bin/python3 /home/shopno/k8s-platform/scripts/webhook-server.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+Environment="WEBHOOK_PORT=8080"
+Environment="WEBHOOK_SECRET="
+Environment="PYTHONUNBUFFERED=1"
+
+# Hardening
+PrivateTmp=yes
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/log/k8s-webhooks /tmp
+
+TimeoutStopSec=10
+KillMode=mixed
+
+[Install]
+WantedBy=multi-user.target

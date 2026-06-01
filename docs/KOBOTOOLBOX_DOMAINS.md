@@ -1,6 +1,6 @@
-# KoboToolbox Configuration for Shopnoltd Platform
+# ShopnoltdToolbox Configuration for Shopnoltd Platform
 
-## Environment Variables for KoboToolbox Services
+## Environment Variables for ShopnoltdToolbox Services
 
 Update the following files with all domains and subdomains:
 
@@ -61,7 +61,7 @@ env:
 
 ## All Domains & Subdomains Available
 
-### KoboToolbox Services
+### ShopnoltdToolbox Services
 | Subdomain | Service | Purpose |
 |-----------|---------|---------|
 | `kf.shopnoltd.dpdns.org` | KoboForm | Primary Kobo Forms interface |
