@@ -6,20 +6,17 @@ from pathlib import Path
 BASE = Path(__file__).resolve().parents[1]
 
 REGISTRY = BASE / "config/domain-registry.yaml"
-
 INGRESS_DIR = BASE / "generated/ingress"
-
-CLOUDFLARED_FILE = (
-    BASE / "generated/cloudflared/cloudflared.yaml"
-)
+CLOUDFLARED_FILE = BASE / "generated/cloudflared/cloudflared.yaml"
 
 
 def load_registry():
-    with open(REGISTRY) as f:
+    with open(REGISTRY, "r") as f:
         return yaml.safe_load(f)["domains"]
 
 
 def flatten(domains):
+
     result = {}
 
     for key, value in domains.items():
@@ -47,7 +44,7 @@ def ingress_yaml(name, host, service):
 kind: Ingress
 metadata:
   name: {name}-ingress
-  namespace: default
+  namespace: argocd
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
 spec:
@@ -60,9 +57,9 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {service}
+            name: {service}-service
             port:
-              number: 8000
+              number: 80
 """
 
 
@@ -73,14 +70,16 @@ def build_cloudflared(domains):
         "ingress:"
     ]
 
-    for _, item in domains.items():
+    for item in domains.values():
 
         lines.extend([
             f"  - hostname: {item['host']}",
             "    service: http://traefik.kube-system.svc.cluster.local:80"
         ])
 
-    lines.append("  - service: http_status:404")
+    lines.append(
+        "  - service: http_status:404"
+    )
 
     return "\n".join(lines)
 
