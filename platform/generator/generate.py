@@ -1,45 +1,30 @@
-#!/usr/bin/env python3
-
 import yaml
 from pathlib import Path
 
+# =========================
+# BASE PATHS
+# =========================
 BASE = Path(__file__).resolve().parents[1]
 
 REGISTRY = BASE / "config/domain-registry.yaml"
-INGRESS_DIR = BASE / "generated/ingress"
-CLOUDFLARED_FILE = BASE / "generated/cloudflared/cloudflared.yaml"
+
+# ONLY ONE SOURCE OF TRUTH FOR GITOPS
+GITOPS_INGRESS = BASE / "gitops/ingress"
+GITOPS_CLOUDFLARED = BASE / "gitops/cloudflared/cloudflared.yaml"
 
 
-def load_registry():
-    with open(REGISTRY, "r") as f:
+# =========================
+# LOAD DOMAINS
+# =========================
+def load_domains():
+    with open(REGISTRY) as f:
         return yaml.safe_load(f)["domains"]
 
 
-def flatten(domains):
-
-    result = {}
-
-    for key, value in domains.items():
-
-        if not isinstance(value, dict):
-            continue
-
-        if "host" in value:
-            result[key] = value
-            continue
-
-        for subkey, host in value.items():
-
-            result[subkey] = {
-                "host": host,
-                "service": subkey
-            }
-
-    return result
-
-
-def ingress_yaml(name, host, service):
-
+# =========================
+# INGRESS TEMPLATE (FIXED)
+# =========================
+def build_ingress(name, host, service):
     return f"""apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -57,85 +42,67 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {service}-service
+            name: {service}
             port:
               number: 80
 """
+    
 
-
-def build_cloudflared(domains):
-
-    lines = [
+# =========================
+# CLOUDFLARED TEMPLATE
+# =========================
+def cloudflared_header():
+    return [
         "tunnel: cloudflared-global",
         "ingress:"
     ]
 
-    for item in domains.values():
 
-        lines.extend([
-            f"  - hostname: {item['host']}",
-            "    service: http://traefik.kube-system.svc.cluster.local:80"
-        ])
-
-    lines.append(
-        "  - service: http_status:404"
-    )
-
-    return "\n".join(lines)
-
-
+# =========================
+# MAIN
+# =========================
 def main():
+    domains = load_domains()
 
-    INGRESS_DIR.mkdir(
-        parents=True,
-        exist_ok=True
-    )
+    # Ensure folders exist
+    GITOPS_INGRESS.mkdir(parents=True, exist_ok=True)
+    GITOPS_CLOUDFLARED.parent.mkdir(parents=True, exist_ok=True)
 
-    CLOUDFLARED_FILE.parent.mkdir(
-        parents=True,
-        exist_ok=True
-    )
+    cf = cloudflared_header()
 
-    raw = load_registry()
+    for name, cfg in domains.items():
 
-    domains = flatten(raw)
+        if not isinstance(cfg, dict):
+            continue
 
-    for old in INGRESS_DIR.glob("*.yaml"):
-        old.unlink()
+        host = cfg.get("host")
+        service = cfg.get("service", name)
 
-    for name, item in domains.items():
+        if not host:
+            continue
 
-        host = item["host"]
+        # ---------------------
+        # INGRESS FILE
+        # ---------------------
+        ingress_file = GITOPS_INGRESS / f"{name}-ingress.yaml"
 
-        service = item.get(
-            "service",
-            name
+        ingress_file.write_text(
+            build_ingress(name, host, service)
         )
 
-        output = (
-            INGRESS_DIR /
-            f"{name}-ingress.yaml"
-        )
+        # ---------------------
+        # CLOUDFLARED ROUTE
+        # ALWAYS TRAEFIK
+        # ---------------------
+        cf.append(f"  - hostname: {host}")
+        cf.append("    service: http://traefik.kube-system.svc.cluster.local:80")
 
-        output.write_text(
-            ingress_yaml(
-                name,
-                host,
-                service
-            )
-        )
+    # fallback
+    cf.append("  - service: http_status:404")
 
-    CLOUDFLARED_FILE.write_text(
-        build_cloudflared(domains)
-    )
+    GITOPS_CLOUDFLARED.write_text("\n".join(cf))
 
-    print(
-        f"Generated {len(domains)} ingress resources"
-    )
-
-    print(
-        f"Cloudflared config: {CLOUDFLARED_FILE}"
-    )
+    print("✅ GitOps fully regenerated (stable + no drift)")
 
 
 if __name__ == "__main__":
