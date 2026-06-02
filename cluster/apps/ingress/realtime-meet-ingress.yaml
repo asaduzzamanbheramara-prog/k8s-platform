@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: realtime-meet-ingress
+  namespace: argocd
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: meet.shopnoltd.dpdns.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: realtime-meet
+            port:
+              number: 80

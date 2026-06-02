@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: monitoring-prometheus-ingress
+  namespace: argocd
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: prometheus.shopnoltd.dpdns.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: monitoring-prometheus
+            port:
+              number: 80
