@@ -9,9 +9,9 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/asaduzzamanbheramara-prog/k8s-platform
+    repoURL: https://github.com/asaduzzamanbheramara-prog/k8s-platform.git
     targetRevision: main
-    path: gitops/ingress
+    path: cluster/apps/ingress
 
   destination:
     server: https://kubernetes.default.svc
