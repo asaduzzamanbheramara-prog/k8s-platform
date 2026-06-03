@@ -3,15 +3,19 @@ kind: Deployment
 metadata:
   name: api
   namespace: default
+
 spec:
   replicas: 1
+
   selector:
     matchLabels:
       app: api
+
   template:
     metadata:
       labels:
         app: api
+
     spec:
       containers:
         - name: api
@@ -23,7 +27,22 @@ spec:
             - name: PYTHONPATH
               value: /workspace
 
-          command: ["bash", "-c"]
+            - name: DOMAIN_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: domain-api-key
+                  key: DOMAIN_API_KEY
+
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: github-token
+                  key: GITHUB_TOKEN
+
+          command:
+            - bash
+            - -c
+
           args:
             - |
               set -e
@@ -37,7 +56,9 @@ spec:
 
               cd /workspace
 
-              python -m uvicorn app_platform.api.main:app --host 0.0.0.0 --port 8000
+              python -m uvicorn app_platform.api.main:app \
+                --host 0.0.0.0 \
+                --port 8000
 
           ports:
             - containerPort: 8000
@@ -51,15 +72,19 @@ spec:
           hostPath:
             path: /home/shopno/k8s-platform
             type: Directory
+
 ---
 apiVersion: v1
 kind: Service
+
 metadata:
   name: api
   namespace: default
+
 spec:
   selector:
     app: api
+
   ports:
     - port: 80
       targetPort: 8000
