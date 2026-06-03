@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: chat
+  namespace: default
+spec:
+  ingressClassName: traefik
+
+  tls:
+  - secretName: wildcard-shopnoltd
+    hosts:
+    - chat.shopnoltd.dpdns.org
+
+  rules:
+
+  - host: chat.shopnoltd.dpdns.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: chat-ui
+            port:
+              number: 80
+

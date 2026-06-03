@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SaaS Domain Dashboard</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        input { padding: 8px; margin: 5px; }
+        button { padding: 8px 12px; cursor: pointer; }
+        .box { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+
+<h1>🚀 SaaS Domain Control Panel</h1>
+
+<div class="box">
+    <h3>Add Domain</h3>
+    <input id="name" placeholder="name (chat)" />
+    <input id="host" placeholder="host (chat.shopnoltd.dpdns.org)" />
+    <button onclick="addDomain()">Add Domain</button>
+</div>
+
+<div class="box">
+    <h3>Domains</h3>
+    <button onclick="load()">Refresh</button>
+    <pre id="output"></pre>
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>

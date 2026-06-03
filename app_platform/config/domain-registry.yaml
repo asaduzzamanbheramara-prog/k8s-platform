@@ -1,0 +1,36 @@
+domains:
+  api:
+    host: api.shopnoltd.dpdns.org
+    aliases:
+    - www.api.shopnoltd.dpdns.org
+    service: api
+    namespace: default
+    port: 80
+  blog:
+    host: blog.shopnoltd.dpdns.org
+    aliases:
+    - www.blog.shopnoltd.dpdns.org
+    service: blog
+    namespace: default
+    port: 80
+  openai:
+    host: openai.shopnoltd.dpdns.org
+    aliases:
+    - www.openai.shopnoltd.dpdns.org
+    service: openai
+    namespace: openai
+    port: 8000
+  chat:
+    host: chat.shopnoltd.dpdns.org
+    aliases: []
+    service: chat-ui
+    namespace: default
+    port: 80
+settings:
+  ingress_class: traefik
+  tls_secret: wildcard-shopnoltd
+  ai:
+    host: ai.shopnoltd.dpdns.org
+    service: ai-frontend
+    namespace: default
+    port: 3000

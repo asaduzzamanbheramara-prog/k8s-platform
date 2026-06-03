@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: blog
+  namespace: default
+spec:
+  ingressClassName: traefik
+
+  tls:
+  - secretName: wildcard-shopnoltd
+    hosts:
+    - blog.shopnoltd.dpdns.org
+    - www.blog.shopnoltd.dpdns.org
+
+  rules:
+
+  - host: blog.shopnoltd.dpdns.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: blog
+            port:
+              number: 80
+
+  - host: www.blog.shopnoltd.dpdns.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: blog
+            port:
+              number: 80
+

@@ -1,6 +1,5 @@
 apiVersion: v1
 kind: ConfigMap
-
 metadata:
   name: cloudflared-global-config
   namespace: kube-system
@@ -21,10 +20,25 @@ data:
       - hostname: shopnoltd.dpdns.org
         service: http://traefik.kube-system.svc.cluster.local:80
 
-      # =========================================
-      # www ROOT DOMAIN
-      # =========================================
       - hostname: www.shopnoltd.dpdns.org
+        service: http://traefik.kube-system.svc.cluster.local:80
+
+      # =========================================
+      # API
+      # =========================================
+      - hostname: api.shopnoltd.dpdns.org
+        service: http://traefik.kube-system.svc.cluster.local:80
+
+      - hostname: www.api.shopnoltd.dpdns.org
+        service: http://traefik.kube-system.svc.cluster.local:80
+
+      # =========================================
+      # BLOG
+      # =========================================
+      - hostname: blog.shopnoltd.dpdns.org
+        service: http://traefik.kube-system.svc.cluster.local:80
+
+      - hostname: www.blog.shopnoltd.dpdns.org
         service: http://traefik.kube-system.svc.cluster.local:80
 
       # =========================================
@@ -56,7 +70,7 @@ data:
       # =========================================
       - hostname: mail.shopnoltd.dpdns.org
         service: http://traefik.kube-system.svc.cluster.local:80
-    
+
       # =========================================
       # STORAGE
       # =========================================
@@ -102,13 +116,10 @@ data:
       - hostname: openai.shopnoltd.dpdns.org
         service: http://traefik.kube-system.svc.cluster.local:80
 
-      # =========================================
-      # WILDCARD
-      # =========================================
-      - hostname: "*.shopnoltd.dpdns.org"
+      - hostname: www.openai.shopnoltd.dpdns.org
         service: http://traefik.kube-system.svc.cluster.local:80
 
       # =========================================
-      # DEFAULT
+      # DEFAULT (CATCH-ALL SAFE 404)
       # =========================================
       - service: http_status:404

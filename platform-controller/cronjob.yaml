@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ingress-dns-sync
+  namespace: default
+
+spec:
+  schedule: "*/2 * * * *"
+
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: ingress-sync-sa
+          restartPolicy: OnFailure
+
+          containers:
+            - name: sync
+              image: ai-platform-controller:latest
+              imagePullPolicy: IfNotPresent
+
+              command: ["python", "/app/ingress_watcher.py"]
+
+              env:
+                - name: CF_API_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: cloudflare
+                      key: token
+
+                - name: CF_ZONE_ID
+                  value: "bc13b09abb3f6b03ac725dc12a3cbac5"
+
+                - name: CF_TUNNEL_ID
+                  value: "5d6e037a-7c09-4788-8532-11dba5fc1a72"

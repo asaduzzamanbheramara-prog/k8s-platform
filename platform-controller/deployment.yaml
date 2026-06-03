@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingress-controller
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ingress-controller
+  template:
+    metadata:
+      labels:
+        app: ingress-controller
+    spec:
+      serviceAccountName: ingress-sync-sa
+      containers:
+        - name: controller
+          image: ai-platform-controller:latest
+          imagePullPolicy: IfNotPresent
+
+          env:
+            - name: CF_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflare
+                  key: token
+
+            - name: CF_ZONE_ID
+              value: "bc13b09abb3f6b03ac725dc12a3cbac5"
+
+            - name: CF_TUNNEL_ID
+              value: "5d6e037a-7c09-4788-8532-11dba5fc1a72"
