@@ -6,3 +6,4 @@ resources:
   - blog.yaml
   - openai.yaml
   - chat.yaml
+  - test2.yaml
