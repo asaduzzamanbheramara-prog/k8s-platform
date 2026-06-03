@@ -2,6 +2,7 @@ from fastapi import FastAPI, Header, HTTPException
 from pathlib import Path
 import subprocess
 import yaml
+import os
 
 from app_platform.auth.auth import require_role
 
@@ -29,7 +30,7 @@ def save(data):
 
 def git_prepare():
     """
-    Make git usable inside Kubernetes container.
+    Prepare git inside Kubernetes container.
     """
 
     subprocess.run(
@@ -65,6 +66,27 @@ def git_prepare():
         ],
         check=False
     )
+
+    token = os.getenv("GITHUB_TOKEN")
+
+    if token:
+        subprocess.run(
+            [
+                "git",
+                "remote",
+                "set-url",
+                "origin",
+                (
+                    "https://"
+                    f"{token}"
+                    "@github.com/"
+                    "asaduzzamanbheramara-prog/"
+                    "k8s-platform.git"
+                )
+            ],
+            cwd=ROOT,
+            check=False
+        )
 
 
 @app.get("/health")
@@ -172,20 +194,23 @@ def add_domain(
             check=True
         )
 
-        try:
-            subprocess.run(
-                [
-                    "git",
-                    "push"
-                ],
-                cwd=ROOT,
-                check=True
-            )
-        except Exception as e:
+        push = subprocess.run(
+            [
+                "git",
+                "push"
+            ],
+            cwd=ROOT,
+            capture_output=True,
+            text=True
+        )
+
+        if push.returncode != 0:
             return {
                 "ok": True,
                 "domain": name,
-                "warning": f"git push failed: {str(e)}"
+                "warning": "git push failed",
+                "stdout": push.stdout,
+                "stderr": push.stderr
             }
 
     return {
