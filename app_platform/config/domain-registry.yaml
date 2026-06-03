@@ -44,6 +44,12 @@ domains:
     service: chat-ui
     namespace: default
     port: 80
+  test6:
+    host: test6.shopnoltd.dpdns.org
+    aliases: []
+    service: chat-ui
+    namespace: default
+    port: 80
 settings:
   ingress_class: traefik
   tls_secret: wildcard-shopnoltd
