@@ -12,9 +12,11 @@ ROOT = BASE.parent
 
 REGISTRY = BASE / "config/domain-registry.yaml"
 
+
 def load():
     with open(REGISTRY) as f:
         return yaml.safe_load(f)
+
 
 def save(data):
     with open(REGISTRY, "w") as f:
@@ -24,9 +26,11 @@ def save(data):
             sort_keys=False
         )
 
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
 
 @app.get("/domains")
 def domains(
@@ -39,6 +43,7 @@ def domains(
         raise HTTPException(403)
 
     return load()
+
 
 @app.post("/domain")
 def add_domain(
@@ -98,25 +103,38 @@ def add_domain(
         check=True
     )
 
-    subprocess.run(
+    status = subprocess.run(
         [
             "git",
-            "commit",
-            "-m",
-            f"add domain {name}"
+            "status",
+            "--porcelain"
         ],
         cwd=ROOT,
+        capture_output=True,
+        text=True,
         check=True
     )
 
-    subprocess.run(
-        [
-            "git",
-            "push"
-        ],
-        cwd=ROOT,
-        check=True
-    )
+    if status.stdout.strip():
+        subprocess.run(
+            [
+                "git",
+                "commit",
+                "-m",
+                f"add domain {name}"
+            ],
+            cwd=ROOT,
+            check=True
+        )
+
+        subprocess.run(
+            [
+                "git",
+                "push"
+            ],
+            cwd=ROOT,
+            check=True
+        )
 
     return {
         "ok": True,
