@@ -27,9 +27,51 @@ def save(data):
         )
 
 
+def git_prepare():
+    """
+    Make git usable inside Kubernetes container.
+    """
+
+    subprocess.run(
+        [
+            "git",
+            "config",
+            "--global",
+            "--add",
+            "safe.directory",
+            str(ROOT)
+        ],
+        check=False
+    )
+
+    subprocess.run(
+        [
+            "git",
+            "config",
+            "--global",
+            "user.name",
+            "Shopno Platform Bot"
+        ],
+        check=False
+    )
+
+    subprocess.run(
+        [
+            "git",
+            "config",
+            "--global",
+            "user.email",
+            "bot@shopnoltd.dpdns.org"
+        ],
+        check=False
+    )
+
+
 @app.get("/health")
 def health():
-    return {"status": "ok"}
+    return {
+        "status": "ok"
+    }
 
 
 @app.get("/domains")
@@ -55,6 +97,8 @@ def add_domain(
         ["admin", "developer"]
     ):
         raise HTTPException(403)
+
+    git_prepare()
 
     data = load()
 
@@ -116,6 +160,7 @@ def add_domain(
     )
 
     if status.stdout.strip():
+
         subprocess.run(
             [
                 "git",
@@ -127,14 +172,21 @@ def add_domain(
             check=True
         )
 
-        subprocess.run(
-            [
-                "git",
-                "push"
-            ],
-            cwd=ROOT,
-            check=True
-        )
+        try:
+            subprocess.run(
+                [
+                    "git",
+                    "push"
+                ],
+                cwd=ROOT,
+                check=True
+            )
+        except Exception as e:
+            return {
+                "ok": True,
+                "domain": name,
+                "warning": f"git push failed: {str(e)}"
+            }
 
     return {
         "ok": True,
