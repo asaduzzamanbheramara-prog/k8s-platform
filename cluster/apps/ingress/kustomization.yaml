@@ -7,3 +7,4 @@ resources:
   - openai.yaml
   - chat.yaml
   - test2.yaml
+  - test4.yaml
