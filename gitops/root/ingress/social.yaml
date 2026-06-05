@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: social
+  namespace: social
+spec:
+  ingressClassName: traefik
+
+  tls:
+  - secretName: wildcard-shopnoltd
+    hosts:
+    - social.shopnoltd.dpdns.org
+    - www.social.shopnoltd.dpdns.org
+
+  rules:
+
+  - host: social.shopnoltd.dpdns.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: social
+            port:
+              number: 80
+
+  - host: www.social.shopnoltd.dpdns.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: social
+            port:
+              number: 80
+

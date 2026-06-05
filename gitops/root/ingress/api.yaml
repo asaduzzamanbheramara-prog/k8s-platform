@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api
+  namespace: platform
+spec:
+  ingressClassName: traefik
+
+  tls:
+  - secretName: wildcard-shopnoltd
+    hosts:
+    - api.shopnoltd.dpdns.org
+    - www.api.shopnoltd.dpdns.org
+
+  rules:
+
+  - host: api.shopnoltd.dpdns.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: api
+            port:
+              number: 80
+
+  - host: www.api.shopnoltd.dpdns.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: api
+            port:
+              number: 80
+

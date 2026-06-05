@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: billing
+  namespace: billing
+spec:
+  ingressClassName: traefik
+
+  tls:
+  - secretName: wildcard-shopnoltd
+    hosts:
+    - billing.shopnoltd.dpdns.org
+    - www.billing.shopnoltd.dpdns.org
+
+  rules:
+
+  - host: billing.shopnoltd.dpdns.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: billing
+            port:
+              number: 80
+
+  - host: www.billing.shopnoltd.dpdns.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: billing
+            port:
+              number: 80
+
