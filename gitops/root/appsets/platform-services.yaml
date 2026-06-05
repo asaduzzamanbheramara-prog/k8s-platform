@@ -1,0 +1,62 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+
+metadata:
+  name: platform-services
+  namespace: argocd
+
+spec:
+  generators:
+    - list:
+        elements:
+          - name: monitoring
+            path: apps/monitoring
+
+          - name: queue
+            path: apps/queue
+
+          - name: storage
+            path: apps/storage
+
+          - name: realtime
+            path: apps/realtime
+
+          - name: erp
+            path: apps/erp
+
+          - name: kobo
+            path: apps/kobo
+
+          - name: mail
+            path: apps/mail
+
+          - name: openai
+            path: apps/openai
+
+          - name: cursor
+            path: apps/cursor
+
+  template:
+    metadata:
+      name: '{{name}}'
+
+    spec:
+      project: platform
+
+      source:
+        repoURL: https://github.com/asaduzzamanbheramara-prog/k8s-platform.git
+        targetRevision: main
+        path: '{{path}}'
+
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{name}}'
+
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
