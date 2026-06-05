@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openai
+  namespace: openai
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: openai
+
+  template:
+    metadata:
+      labels:
+        app: openai
+
+    spec:
+      containers:
+      - name: openai
+        image: ghcr.io/open-webui/open-webui:main
+
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - containerPort: 8080

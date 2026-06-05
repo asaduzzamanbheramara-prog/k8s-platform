@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: toolbox
+  namespace: toolbox
+
+spec:
+  ingressClassName: traefik
+
+  rules:
+  - host: toolbox.shopnoltd.dpdns.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+
+        backend:
+          service:
+            name: toolbox
+            port:
+              number: 8000

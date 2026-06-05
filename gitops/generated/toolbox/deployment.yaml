@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: toolbox
+  namespace: toolbox
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: toolbox
+
+  template:
+    metadata:
+      labels:
+        app: toolbox
+
+    spec:
+      containers:
+      - name: toolbox
+        image: kobotoolbox/kpi
+
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - containerPort: 8000

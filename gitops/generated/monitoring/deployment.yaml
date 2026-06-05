@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monitoring
+  namespace: monitoring
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: monitoring
+
+  template:
+    metadata:
+      labels:
+        app: monitoring
+
+    spec:
+      containers:
+      - name: monitoring
+        image: grafana/grafana
+
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - containerPort: 3000

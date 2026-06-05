@@ -1,0 +1,37 @@
+domains:
+
+  openai:
+    namespace: openai
+    host: openai.shopnoltd.dpdns.org
+    image: ghcr.io/open-webui/open-webui:main
+    port: 8080
+
+  erp:
+    namespace: erp
+    host: erp.shopnoltd.dpdns.org
+    image: frappe/erpnext
+    port: 8000
+
+  mail:
+    namespace: mail
+    host: mail.shopnoltd.dpdns.org
+    image: mailserver/docker-mailserver
+    port: 80
+
+  social:
+    namespace: social
+    host: social.shopnoltd.dpdns.org
+    image: mastodon/mastodon
+    port: 3000
+
+  toolbox:
+    namespace: toolbox
+    host: toolbox.shopnoltd.dpdns.org
+    image: kobotoolbox/kpi
+    port: 8000
+
+  monitoring:
+    namespace: monitoring
+    host: monitoring.shopnoltd.dpdns.org
+    image: grafana/grafana
+    port: 3000

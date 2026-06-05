@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mail
+  namespace: mail
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: mail
+
+  template:
+    metadata:
+      labels:
+        app: mail
+
+    spec:
+      containers:
+      - name: mail
+        image: mailserver/docker-mailserver
+
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - containerPort: 80

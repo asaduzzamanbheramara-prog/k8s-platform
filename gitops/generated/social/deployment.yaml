@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: social
+  namespace: social
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: social
+
+  template:
+    metadata:
+      labels:
+        app: social
+
+    spec:
+      containers:
+      - name: social
+        image: mastodon/mastodon
+
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - containerPort: 3000
