@@ -1,0 +1,53 @@
+templates:
+
+  openai:
+    image: ghcr.io/open-webui/open-webui:main
+    port: 8080
+
+  ai:
+    image: ghcr.io/open-webui/open-webui:main
+    port: 8080
+
+  monitoring:
+    image: grafana/grafana:latest
+    port: 3000
+
+  codeserver:
+    image: codercom/code-server:latest
+    port: 8080
+
+  api:
+    image: nginx:alpine
+    port: 80
+
+  billing:
+    image: nginx:alpine
+    port: 80
+
+  message:
+    image: nginx:alpine
+    port: 80
+
+  call:
+    image: nginx:alpine
+    port: 80
+
+  erp:
+    image: frappe/erpnext:latest
+    port: 8000
+
+  mail:
+    image: mailserver/docker-mailserver:latest
+    port: 25
+
+  social:
+    image: ghcr.io/mastodon/mastodon:latest
+    port: 3000
+
+  toolbox:
+    image: kobotoolbox/kpi:latest
+    port: 8000
+
+  meet:
+    image: jitsi/web:stable
+    port: 80

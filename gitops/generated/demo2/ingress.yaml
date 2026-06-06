@@ -1,14 +1,14 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: mail
-  namespace: mail
+  name: demo2
+  namespace: demo2
 
 spec:
   ingressClassName: traefik
 
   rules:
-  - host: mail.shopnoltd.dpdns.org
+  - host: demo2.shopnoltd.dpdns.org
     http:
       paths:
       - path: /
@@ -16,6 +16,6 @@ spec:
 
         backend:
           service:
-            name: mail
+            name: demo2
             port:
-              number: 25
+              number: 80

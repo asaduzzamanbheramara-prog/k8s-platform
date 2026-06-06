@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: openai
-  namespace: openai
+  name: ai
+  namespace: ai
 
 spec:
   replicas: 1
 
   selector:
     matchLabels:
-      app: openai
+      app: ai
 
   template:
     metadata:
       labels:
-        app: openai
+        app: ai
 
     spec:
       containers:
-      - name: openai
+      - name: ai
 
         image: ghcr.io/open-webui/open-webui:main
 

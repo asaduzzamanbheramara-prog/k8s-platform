@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: openai
-  namespace: openai
+  name: codeserver
+  namespace: codeserver
 
 spec:
   replicas: 1
 
   selector:
     matchLabels:
-      app: openai
+      app: codeserver
 
   template:
     metadata:
       labels:
-        app: openai
+        app: codeserver
 
     spec:
       containers:
-      - name: openai
+      - name: codeserver
 
-        image: ghcr.io/open-webui/open-webui:main
+        image: codercom/code-server:latest
 
         imagePullPolicy: IfNotPresent
 

@@ -62,12 +62,36 @@ spec:
     spec:
       containers:
       - name: {app}
+
         image: {image}
 
         imagePullPolicy: IfNotPresent
 
         ports:
         - containerPort: {port}
+
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+
+          limits:
+            cpu: 500m
+            memory: 512Mi
+
+        readinessProbe:
+          tcpSocket:
+            port: {port}
+
+          initialDelaySeconds: 10
+          periodSeconds: 10
+
+        livenessProbe:
+          tcpSocket:
+            port: {port}
+
+          initialDelaySeconds: 30
+          periodSeconds: 20
 """
     )
 
@@ -151,6 +175,11 @@ def main():
 
     cfg = load_registry()
 
+    OUTPUT.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
     for app, spec in cfg["domains"].items():
 
         namespace = spec["namespace"]
@@ -194,7 +223,7 @@ def main():
         print(f"Generated {app}")
 
     print()
-    print("Done.")
+    print("Done")
     print(f"Output: {OUTPUT}")
 
 

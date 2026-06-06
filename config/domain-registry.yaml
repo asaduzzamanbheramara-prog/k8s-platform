@@ -1,37 +1,76 @@
 domains:
-
   openai:
     namespace: openai
     host: openai.shopnoltd.dpdns.org
     image: ghcr.io/open-webui/open-webui:main
     port: 8080
-
   erp:
     namespace: erp
     host: erp.shopnoltd.dpdns.org
-    image: frappe/erpnext
+    image: frappe/erpnext:latest
     port: 8000
-
   mail:
     namespace: mail
     host: mail.shopnoltd.dpdns.org
-    image: mailserver/docker-mailserver
-    port: 80
-
+    image: mailserver/docker-mailserver:latest
+    port: 25
   social:
     namespace: social
     host: social.shopnoltd.dpdns.org
-    image: mastodon/mastodon
+    image: ghcr.io/mastodon/mastodon:latest
     port: 3000
-
   toolbox:
     namespace: toolbox
     host: toolbox.shopnoltd.dpdns.org
-    image: kobotoolbox/kpi
+    image: kobotoolbox/kpi:latest
     port: 8000
-
   monitoring:
     namespace: monitoring
     host: monitoring.shopnoltd.dpdns.org
-    image: grafana/grafana
+    image: grafana/grafana:latest
     port: 3000
+  meet:
+    namespace: meet
+    host: meet.shopnoltd.dpdns.org
+    image: jitsi/web:stable
+    port: 80
+  ai:
+    namespace: ai
+    host: ai.shopnoltd.dpdns.org
+    image: ghcr.io/open-webui/open-webui:main
+    port: 8080
+  api:
+    namespace: api
+    host: api.shopnoltd.dpdns.org
+    image: nginx:alpine
+    port: 80
+  billing:
+    namespace: billing
+    host: billing.shopnoltd.dpdns.org
+    image: nginx:alpine
+    port: 80
+  message:
+    namespace: message
+    host: message.shopnoltd.dpdns.org
+    image: nginx:alpine
+    port: 80
+  call:
+    namespace: call
+    host: call.shopnoltd.dpdns.org
+    image: nginx:alpine
+    port: 80
+  codeserver:
+    namespace: codeserver
+    host: codeserver.shopnoltd.dpdns.org
+    image: codercom/code-server:latest
+    port: 8080
+  demo:
+    namespace: demo
+    host: demo.shopnoltd.dpdns.org
+    image: nginx:alpine
+    port: 80
+  demo2:
+    namespace: demo2
+    host: demo2.shopnoltd.dpdns.org
+    image: nginx:alpine
+    port: 80
