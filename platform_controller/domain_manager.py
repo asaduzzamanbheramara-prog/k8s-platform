@@ -71,8 +71,7 @@ def add_app(name, template):
             f"Template '{template}' not found"
         )
 
-    if "domains" not in registry:
-        registry["domains"] = {}
+    registry.setdefault("domains", {})
 
     if name in registry["domains"]:
         raise Exception(
@@ -165,5 +164,5 @@ if __name__ == "__main__":
 
     create(
         "demo",
-        "openai"
+        "api"
     )

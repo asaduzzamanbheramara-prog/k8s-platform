@@ -69,8 +69,3 @@ domains:
     host: demo.shopnoltd.dpdns.org
     image: nginx:alpine
     port: 80
-  demo2:
-    namespace: demo2
-    host: demo2.shopnoltd.dpdns.org
-    image: nginx:alpine
-    port: 80
