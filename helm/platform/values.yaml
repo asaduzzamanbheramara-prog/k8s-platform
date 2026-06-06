@@ -2,55 +2,87 @@ global:
   imagePullPolicy: Always
   namespace: platform
 
+ingress:
+  enabled: true
+  domain: shopnoltd.dpdns.org
+  className: nginx
+
+# =========================
+# PLATFORM SERVICES
+# =========================
 services:
+
   ai:
     image: ghcr.io/open-webui/open-webui:main
     port: 8080
-
-  api:
-    image: nginx:alpine
-    port: 80
-
-  billing:
-    image: nginx:alpine
-    port: 80
-
-  call:
-    image: nginx:alpine
-    port: 80
-
-  codeserver:
-    image: codercom/code-server:latest
-    port: 8080
-
-  erp:
-    image: frappe/erpnext:latest
-    port: 8000
-
-  mail:
-    image: mailserver/docker-mailserver:latest
-    port: 25
-
-  meet:
-    image: jitsi/web:latest
-    port: 80
-
-  monitoring:
-    image: grafana/grafana:latest
-    port: 3000
+    namespace: ai
 
   openai:
     image: ghcr.io/open-webui/open-webui:main
     port: 8080
+    namespace: ai
+
+  api:
+    image: nginx:alpine
+    port: 80
+    namespace: api
+
+  billing:
+    image: nginx:alpine
+    port: 80
+    namespace: billing
+
+  call:
+    image: nginx:alpine
+    port: 80
+    namespace: call
+
+  codeserver:
+    image: codercom/code-server:latest
+    port: 8080
+    namespace: codeserver
+
+  erp:
+    image: frappe/erpnext:latest
+    port: 8000
+    namespace: erp
+
+  mail:
+    image: mailserver/docker-mailserver:latest
+    port: 25
+    namespace: communication
+
+  meet:
+    image: jitsi/web:latest
+    port: 80
+    namespace: communication
+
+  monitoring:
+    image: grafana/grafana:latest
+    port: 3000
+    namespace: monitoring
 
   social:
     image: ghcr.io/mastodon/mastodon:latest
     port: 3000
+    namespace: communication
 
   toolbox:
     image: kobotoolbox/kpi:latest
     port: 8000
+    namespace: toolbox
 
-ingress:
-  enabled: false
-  domain: local
+  realtime:
+    image: nginx:alpine
+    port: 3000
+    namespace: realtime
+
+  storage:
+    image: nginx:alpine
+    port: 9000
+    namespace: storage
+
+  cursor:
+    image: nginx:alpine
+    port: 3000
+    namespace: development
