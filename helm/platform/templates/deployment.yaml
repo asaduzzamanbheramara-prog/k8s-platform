@@ -1,0 +1,50 @@
+{{- range $name, $svc := .Values.services }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $name }}
+  namespace: {{ $.Values.global.namespace }}
+spec:
+  replicas: 1
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+  minReadySeconds: 10
+  progressDeadlineSeconds: 600
+  revisionHistoryLimit: 3
+
+  selector:
+    matchLabels:
+      app: {{ $name }}
+
+  template:
+    metadata:
+      labels:
+        app: {{ $name }}
+
+    spec:
+      containers:
+        - name: {{ $name }}
+          image: {{ $svc.image }}
+          imagePullPolicy: {{ $.Values.global.imagePullPolicy }}
+
+          ports:
+            - containerPort: {{ $svc.port }}
+
+          readinessProbe:
+            tcpSocket:
+              port: {{ $svc.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          livenessProbe:
+            tcpSocket:
+              port: {{ $svc.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 20
+---
+{{- end }}

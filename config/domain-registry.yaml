@@ -32,7 +32,7 @@ domains:
   meet:
     namespace: meet
     host: meet.shopnoltd.dpdns.org
-    image: jitsi/web:stable
+    image: jitsi/web:latest
     port: 80
   ai:
     namespace: ai
