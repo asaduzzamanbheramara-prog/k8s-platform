@@ -1,6 +1,14 @@
+{{- $namespaces := dict }}
+{{- range $name, $svc := .Values.services }}
+{{- $_ := set $namespaces $svc.namespace true }}
+{{- end }}
+
+{{- range $ns, $_ := $namespaces }}
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: {{ .Values.global.namespace }}
+  name: {{ $ns }}
   labels:
     managed-by: helm
+---
+{{- end }}

@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: kobo-env
-  namespace: kobo
-data:
-  DJANGO_SETTINGS_MODULE: onadata.settings.prod

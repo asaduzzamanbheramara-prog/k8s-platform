@@ -3,9 +3,11 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ $name }}
-  namespace: {{ $.Values.global.namespace }}
+  namespace: {{ $svc.namespace }}
+
 spec:
   minAvailable: 1
+
   selector:
     matchLabels:
       app: {{ $name }}

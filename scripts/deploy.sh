@@ -27,7 +27,7 @@ echo -e "${GREEN}Using Kubernetes context: $KUBE_CONTEXT${NC}"
 
 # Step 1: Create namespaces
 echo -e "\n${YELLOW}[1/6] Creating namespaces...${NC}"
-kubectl apply -f cluster/namespaces.yaml
+kubectl apply -f config/namespaces.yaml
 echo -e "${GREEN}✓ Namespaces created${NC}"
 
 # Step 2: Install cert-manager
