@@ -6,7 +6,6 @@ resources:
   - ../../apps/erp
   - ../../apps/social
   - ../../apps/realtime
-  - ../../apps/queue
   - ../../apps/storage
   - ../../apps/webrtc
   - ../../apps/turn
