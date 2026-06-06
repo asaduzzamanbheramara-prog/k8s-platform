@@ -5,7 +5,6 @@ resources:
   - web-v1.yaml
   - workspace.yaml
   - sandbox.yaml
-  - ingress.yaml
   - api-service.yaml
   - web-service.yaml
   - workspace-service.yaml
