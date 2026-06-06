@@ -1,9 +1,0 @@
-resources:
-  - ../../base
-
-patches:
-  - path: patch.yaml
-    target:
-      kind: Deployment
-      name: api-v1
-      namespace: cursor
