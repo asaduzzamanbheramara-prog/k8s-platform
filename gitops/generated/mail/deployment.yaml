@@ -19,9 +19,7 @@ spec:
     spec:
       containers:
       - name: mail
-
         image: mailserver/docker-mailserver:latest
-
         imagePullPolicy: IfNotPresent
 
         ports:

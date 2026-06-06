@@ -62,9 +62,7 @@ spec:
     spec:
       containers:
       - name: {app}
-
         image: {image}
-
         imagePullPolicy: IfNotPresent
 
         ports:
@@ -108,6 +106,7 @@ f"""apiVersion: v1
 kind: Service
 metadata:
   name: {app}
+  namespace: {app}
 
 spec:
   selector:
@@ -171,6 +170,19 @@ def generate_kustomization(app_dir):
     )
 
 
+def generate_root_kustomization(apps):
+
+    content = "resources:\n"
+
+    for app in apps:
+        content += f"  - {app}\n"
+
+    write(
+        OUTPUT / "kustomization.yaml",
+        content
+    )
+
+
 def main():
 
     cfg = load_registry()
@@ -180,7 +192,11 @@ def main():
         exist_ok=True
     )
 
+    apps = []
+
     for app, spec in cfg["domains"].items():
+
+        apps.append(app)
 
         namespace = spec["namespace"]
         host = spec["host"]
@@ -221,6 +237,8 @@ def main():
         )
 
         print(f"Generated {app}")
+
+    generate_root_kustomization(apps)
 
     print()
     print("Done")

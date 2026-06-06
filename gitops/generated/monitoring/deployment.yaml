@@ -19,9 +19,7 @@ spec:
     spec:
       containers:
       - name: monitoring
-
         image: grafana/grafana:latest
-
         imagePullPolicy: IfNotPresent
 
         ports:

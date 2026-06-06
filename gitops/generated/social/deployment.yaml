@@ -19,9 +19,7 @@ spec:
     spec:
       containers:
       - name: social
-
         image: ghcr.io/mastodon/mastodon:latest
-
         imagePullPolicy: IfNotPresent
 
         ports:

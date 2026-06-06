@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api
-  namespace: api
+  name: demo1
+  namespace: demo1
 
 spec:
   replicas: 1
 
   selector:
     matchLabels:
-      app: api
+      app: demo1
 
   template:
     metadata:
       labels:
-        app: api
+        app: demo1
 
     spec:
       containers:
-      - name: api
+      - name: demo1
         image: nginx:alpine
         imagePullPolicy: IfNotPresent
 

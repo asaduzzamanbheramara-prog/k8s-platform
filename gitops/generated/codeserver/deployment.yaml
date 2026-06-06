@@ -19,9 +19,7 @@ spec:
     spec:
       containers:
       - name: codeserver
-
         image: codercom/code-server:latest
-
         imagePullPolicy: IfNotPresent
 
         ports:

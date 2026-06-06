@@ -19,9 +19,7 @@ spec:
     spec:
       containers:
       - name: erp
-
         image: frappe/erpnext:latest
-
         imagePullPolicy: IfNotPresent
 
         ports:
