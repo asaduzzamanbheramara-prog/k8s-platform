@@ -7,82 +7,94 @@ ingress:
   domain: shopnoltd.dpdns.org
   className: nginx
 
-# =========================
-# PLATFORM SERVICES
-# =========================
 services:
 
   ai:
     image: ghcr.io/open-webui/open-webui:main
     port: 8080
     namespace: ai
+    domain: ai
 
   openai:
     image: ghcr.io/open-webui/open-webui:main
     port: 8080
     namespace: ai
+    domain: openai
 
   api:
     image: nginx:alpine
     port: 80
     namespace: api
+    domain: api
 
   billing:
     image: nginx:alpine
     port: 80
     namespace: billing
+    domain: billing
 
   call:
     image: nginx:alpine
     port: 80
     namespace: call
+    domain: call
 
   codeserver:
     image: codercom/code-server:latest
     port: 8080
     namespace: codeserver
+    domain: codeserver
 
   erp:
     image: frappe/erpnext:latest
     port: 8000
     namespace: erp
+    domain: erp
 
   mail:
     image: mailserver/docker-mailserver:latest
     port: 25
     namespace: communication
+    domain: mail
 
   meet:
     image: jitsi/web:latest
     port: 80
     namespace: communication
+    domain: meet
 
   monitoring:
     image: grafana/grafana:latest
     port: 3000
     namespace: monitoring
+    domain: monitoring
 
   social:
     image: ghcr.io/mastodon/mastodon:latest
     port: 3000
     namespace: communication
+    domain: social
 
   toolbox:
     image: kobotoolbox/kpi:latest
     port: 8000
     namespace: toolbox
+    domain: toolbox
 
   realtime:
     image: nginx:alpine
-    port: 3000
+    port: 80
     namespace: realtime
+    domain: realtime
 
   storage:
     image: nginx:alpine
-    port: 9000
+    port: 80
     namespace: storage
+    domain: storage
 
   cursor:
     image: nginx:alpine
-    port: 3000
+    port: 80
     namespace: development
+    domain: cursor

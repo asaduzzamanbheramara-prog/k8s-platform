@@ -1,5 +1,7 @@
 {{- if .Values.ingress.enabled }}
+
 {{- range $name, $svc := .Values.services }}
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -10,7 +12,7 @@ spec:
   ingressClassName: {{ $.Values.ingress.className }}
 
   rules:
-  - host: {{ $name }}.{{ $.Values.ingress.domain }}
+  - host: {{ $svc.domain }}.{{ $.Values.ingress.domain }}
     http:
       paths:
       - path: /
@@ -20,6 +22,9 @@ spec:
             name: {{ $name }}
             port:
               number: {{ $svc.port }}
+
 ---
+
 {{- end }}
+
 {{- end }}

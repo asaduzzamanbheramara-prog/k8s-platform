@@ -9,6 +9,9 @@ kind: Namespace
 metadata:
   name: {{ $ns }}
   labels:
-    managed-by: helm
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    meta.helm.sh/release-name: platform
+    meta.helm.sh/release-namespace: platform
 ---
 {{- end }}

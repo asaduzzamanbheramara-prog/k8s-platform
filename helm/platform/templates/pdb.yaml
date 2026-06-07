@@ -4,10 +4,8 @@ kind: PodDisruptionBudget
 metadata:
   name: {{ $name }}
   namespace: {{ $svc.namespace }}
-
 spec:
-  minAvailable: 1
-
+  maxUnavailable: 1
   selector:
     matchLabels:
       app: {{ $name }}
