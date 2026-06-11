@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: root-app
+  namespace: default
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: root-app
+
+  template:
+    metadata:
+      labels:
+        app: root-app
+
+    spec:
+      containers:
+      - name: frontend
+
+        image: shopno-dashboard:latest
+
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - containerPort: 80
